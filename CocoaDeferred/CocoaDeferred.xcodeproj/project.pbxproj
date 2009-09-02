@@ -1,0 +1,537 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		229C375A104C756800CFAA3F /* DeferredKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 229C374C104C756800CFAA3F /* DeferredKit.h */; };
+		229C375D104C756800CFAA3F /* DKDeferred+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C374F104C756800CFAA3F /* DKDeferred+JSON.m */; };
+		229C375E104C756800CFAA3F /* DKDeferred+UIKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C3750104C756800CFAA3F /* DKDeferred+UIKit.m */; };
+		229C375F104C756800CFAA3F /* DKDeferred+UIKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 229C3751104C756800CFAA3F /* DKDeferred+UIKit.h */; };
+		229C3761104C756800CFAA3F /* DKDeferred.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C3753104C756800CFAA3F /* DKDeferred.m */; };
+		229C3763104C756800CFAA3F /* DKDeferred+JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 229C3755104C756800CFAA3F /* DKDeferred+JSON.h */; };
+		229C3764104C756800CFAA3F /* DKDeferred.h in Headers */ = {isa = PBXBuildFile; fileRef = 229C3756104C756800CFAA3F /* DKDeferred.h */; };
+		229C3765104C756800CFAA3F /* DKCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 229C3757104C756800CFAA3F /* DKCallback.h */; };
+		229C3766104C756800CFAA3F /* DKMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 229C3758104C756800CFAA3F /* DKMacros.h */; };
+		229C3767104C756800CFAA3F /* DKCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C3759104C756800CFAA3F /* DKCallback.m */; };
+		229C3773104C76D400CFAA3F /* UIImage+DKDeferred.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C3771104C76D400CFAA3F /* UIImage+DKDeferred.m */; };
+		229C3774104C76D400CFAA3F /* UIImage+DKDeferred.h in Headers */ = {isa = PBXBuildFile; fileRef = 229C3772104C76D400CFAA3F /* UIImage+DKDeferred.h */; };
+		229C37A4104DCFFF00CFAA3F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 229C37A3104DCFFF00CFAA3F /* UIKit.framework */; };
+		229C3820104DDE5F00CFAA3F /* SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C3813104DDE5F00CFAA3F /* SBJSON.m */; };
+		229C3821104DDE5F00CFAA3F /* SBJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 229C3814104DDE5F00CFAA3F /* SBJSON.h */; };
+		229C3822104DDE5F00CFAA3F /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C3815104DDE5F00CFAA3F /* NSString+SBJSON.m */; };
+		229C3823104DDE5F00CFAA3F /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C3816104DDE5F00CFAA3F /* NSObject+SBJSON.m */; };
+		229C3824104DDE5F00CFAA3F /* JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 229C3817104DDE5F00CFAA3F /* JSON.h */; };
+		229C3825104DDE5F00CFAA3F /* SBJsonBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 229C3818104DDE5F00CFAA3F /* SBJsonBase.h */; };
+		229C3826104DDE5F00CFAA3F /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C3819104DDE5F00CFAA3F /* SBJsonParser.m */; };
+		229C3827104DDE5F00CFAA3F /* SBJsonBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C381A104DDE5F00CFAA3F /* SBJsonBase.m */; };
+		229C3828104DDE5F00CFAA3F /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C381B104DDE5F00CFAA3F /* SBJsonWriter.m */; };
+		229C3829104DDE5F00CFAA3F /* SBJsonParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 229C381C104DDE5F00CFAA3F /* SBJsonParser.h */; };
+		229C382A104DDE5F00CFAA3F /* SBJsonWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 229C381D104DDE5F00CFAA3F /* SBJsonWriter.h */; };
+		229C382B104DDE5F00CFAA3F /* NSObject+SBJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 229C381E104DDE5F00CFAA3F /* NSObject+SBJSON.h */; };
+		229C382C104DDE5F00CFAA3F /* NSString+SBJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 229C381F104DDE5F00CFAA3F /* NSString+SBJSON.h */; };
+		229C38A3104DE2B900CFAA3F /* libDeferredKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D2AAC07E0554694100DB518D /* libDeferredKit.a */; };
+		229C38A4104DE2C600CFAA3F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 229C37A3104DCFFF00CFAA3F /* UIKit.framework */; };
+		229C38A5104DE2CD00CFAA3F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
+		229C38B3104DE3E500CFAA3F /* GTMIPhoneUnitTestMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C38AE104DE3E500CFAA3F /* GTMIPhoneUnitTestMain.m */; };
+		229C38B4104DE3E500CFAA3F /* GTMIPhoneUnitTestDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C38B1104DE3E500CFAA3F /* GTMIPhoneUnitTestDelegate.m */; };
+		229C38B5104DE3E500CFAA3F /* GTMSenTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C38B2104DE3E500CFAA3F /* GTMSenTestCase.m */; };
+		229C38CA104DE5C400CFAA3F /* DKDeferredTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C38C9104DE5C400CFAA3F /* DKDeferredTests.m */; };
+		229C38D0104DE5E400CFAA3F /* DKDeferredJSONTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C38CF104DE5E400CFAA3F /* DKDeferredJSONTests.m */; };
+		229C390C104DEAC800CFAA3F /* DKCallbackTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C390B104DEAC800CFAA3F /* DKCallbackTests.m */; };
+		AA747D9F0F9514B9006C5449 /* CocoaDeferred_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* CocoaDeferred_Prefix.pch */; };
+		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		229C38FE104DE8E000CFAA3F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D;
+			remoteInfo = DeferredKit;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		229C374C104C756800CFAA3F /* DeferredKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeferredKit.h; path = Source/DeferredKit/DeferredKit.h; sourceTree = "<group>"; };
+		229C374D104C756800CFAA3F /* DKDeferredTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DKDeferredTests.m; path = Source/DeferredKit/DKDeferredTests.m; sourceTree = SOURCE_ROOT; };
+		229C374E104C756800CFAA3F /* DKDeferredTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKDeferredTests.h; path = Source/DeferredKit/DKDeferredTests.h; sourceTree = SOURCE_ROOT; };
+		229C374F104C756800CFAA3F /* DKDeferred+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "DKDeferred+JSON.m"; path = "Source/DeferredKit/DKDeferred+JSON.m"; sourceTree = SOURCE_ROOT; };
+		229C3750104C756800CFAA3F /* DKDeferred+UIKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "DKDeferred+UIKit.m"; path = "Source/DeferredKit/DKDeferred+UIKit.m"; sourceTree = SOURCE_ROOT; };
+		229C3751104C756800CFAA3F /* DKDeferred+UIKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "DKDeferred+UIKit.h"; path = "Source/DeferredKit/DKDeferred+UIKit.h"; sourceTree = SOURCE_ROOT; };
+		229C3752104C756800CFAA3F /* DKDeferred+CoreLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "DKDeferred+CoreLocation.m"; path = "Source/DeferredKit/DKDeferred+CoreLocation.m"; sourceTree = SOURCE_ROOT; };
+		229C3753104C756800CFAA3F /* DKDeferred.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DKDeferred.m; path = Source/DeferredKit/DKDeferred.m; sourceTree = SOURCE_ROOT; };
+		229C3754104C756800CFAA3F /* DKDeferred+CoreLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "DKDeferred+CoreLocation.h"; path = "Source/DeferredKit/DKDeferred+CoreLocation.h"; sourceTree = SOURCE_ROOT; };
+		229C3755104C756800CFAA3F /* DKDeferred+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "DKDeferred+JSON.h"; path = "Source/DeferredKit/DKDeferred+JSON.h"; sourceTree = SOURCE_ROOT; };
+		229C3756104C756800CFAA3F /* DKDeferred.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKDeferred.h; path = Source/DeferredKit/DKDeferred.h; sourceTree = SOURCE_ROOT; };
+		229C3757104C756800CFAA3F /* DKCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKCallback.h; path = Source/DeferredKit/DKCallback.h; sourceTree = SOURCE_ROOT; };
+		229C3758104C756800CFAA3F /* DKMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKMacros.h; path = Source/DeferredKit/DKMacros.h; sourceTree = SOURCE_ROOT; };
+		229C3759104C756800CFAA3F /* DKCallback.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DKCallback.m; path = Source/DeferredKit/DKCallback.m; sourceTree = SOURCE_ROOT; };
+		229C3771104C76D400CFAA3F /* UIImage+DKDeferred.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+DKDeferred.m"; path = "Source/DeferredKit/UIImage+DKDeferred.m"; sourceTree = SOURCE_ROOT; };
+		229C3772104C76D400CFAA3F /* UIImage+DKDeferred.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+DKDeferred.h"; path = "Source/DeferredKit/UIImage+DKDeferred.h"; sourceTree = SOURCE_ROOT; };
+		229C37A3104DCFFF00CFAA3F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		229C3813104DDE5F00CFAA3F /* SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBJSON.m; path = Source/JSON/SBJSON.m; sourceTree = SOURCE_ROOT; };
+		229C3814104DDE5F00CFAA3F /* SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJSON.h; path = Source/JSON/SBJSON.h; sourceTree = SOURCE_ROOT; };
+		229C3815104DDE5F00CFAA3F /* NSString+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+SBJSON.m"; path = "Source/JSON/NSString+SBJSON.m"; sourceTree = SOURCE_ROOT; };
+		229C3816104DDE5F00CFAA3F /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+SBJSON.m"; path = "Source/JSON/NSObject+SBJSON.m"; sourceTree = SOURCE_ROOT; };
+		229C3817104DDE5F00CFAA3F /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSON.h; path = Source/JSON/JSON.h; sourceTree = SOURCE_ROOT; };
+		229C3818104DDE5F00CFAA3F /* SBJsonBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJsonBase.h; path = Source/JSON/SBJsonBase.h; sourceTree = SOURCE_ROOT; };
+		229C3819104DDE5F00CFAA3F /* SBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBJsonParser.m; path = Source/JSON/SBJsonParser.m; sourceTree = SOURCE_ROOT; };
+		229C381A104DDE5F00CFAA3F /* SBJsonBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBJsonBase.m; path = Source/JSON/SBJsonBase.m; sourceTree = SOURCE_ROOT; };
+		229C381B104DDE5F00CFAA3F /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBJsonWriter.m; path = Source/JSON/SBJsonWriter.m; sourceTree = SOURCE_ROOT; };
+		229C381C104DDE5F00CFAA3F /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJsonParser.h; path = Source/JSON/SBJsonParser.h; sourceTree = SOURCE_ROOT; };
+		229C381D104DDE5F00CFAA3F /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJsonWriter.h; path = Source/JSON/SBJsonWriter.h; sourceTree = SOURCE_ROOT; };
+		229C381E104DDE5F00CFAA3F /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+SBJSON.h"; path = "Source/JSON/NSObject+SBJSON.h"; sourceTree = SOURCE_ROOT; };
+		229C381F104DDE5F00CFAA3F /* NSString+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+SBJSON.h"; path = "Source/JSON/NSString+SBJSON.h"; sourceTree = SOURCE_ROOT; };
+		229C389C104DE23400CFAA3F /* DeferredTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeferredTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		229C389E104DE23400CFAA3F /* DeferredTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DeferredTest-Info.plist"; sourceTree = "<group>"; };
+		229C38AE104DE3E500CFAA3F /* GTMIPhoneUnitTestMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GTMIPhoneUnitTestMain.m; path = "google-toolbox-for-mac-read-only/UnitTesting/GTMIPhoneUnitTestMain.m"; sourceTree = SOURCE_ROOT; };
+		229C38AF104DE3E500CFAA3F /* GTMSenTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMSenTestCase.h; path = "google-toolbox-for-mac-read-only/UnitTesting/GTMSenTestCase.h"; sourceTree = SOURCE_ROOT; };
+		229C38B0104DE3E500CFAA3F /* GTMIPhoneUnitTestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMIPhoneUnitTestDelegate.h; path = "google-toolbox-for-mac-read-only/UnitTesting/GTMIPhoneUnitTestDelegate.h"; sourceTree = SOURCE_ROOT; };
+		229C38B1104DE3E500CFAA3F /* GTMIPhoneUnitTestDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GTMIPhoneUnitTestDelegate.m; path = "google-toolbox-for-mac-read-only/UnitTesting/GTMIPhoneUnitTestDelegate.m"; sourceTree = SOURCE_ROOT; };
+		229C38B2104DE3E500CFAA3F /* GTMSenTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GTMSenTestCase.m; path = "google-toolbox-for-mac-read-only/UnitTesting/GTMSenTestCase.m"; sourceTree = SOURCE_ROOT; };
+		229C38B6104DE42600CFAA3F /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMDefines.h; path = "google-toolbox-for-mac-read-only/GTMDefines.h"; sourceTree = SOURCE_ROOT; };
+		229C38C8104DE5C400CFAA3F /* DKDeferredTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKDeferredTests.h; sourceTree = "<group>"; };
+		229C38C9104DE5C400CFAA3F /* DKDeferredTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKDeferredTests.m; sourceTree = "<group>"; };
+		229C38CE104DE5E400CFAA3F /* DKDeferredJSONTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKDeferredJSONTests.h; sourceTree = "<group>"; };
+		229C38CF104DE5E400CFAA3F /* DKDeferredJSONTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKDeferredJSONTests.m; sourceTree = "<group>"; };
+		229C390A104DEAC800CFAA3F /* DKCallbackTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKCallbackTests.h; sourceTree = "<group>"; };
+		229C390B104DEAC800CFAA3F /* DKCallbackTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKCallbackTests.m; sourceTree = "<group>"; };
+		AA747D9E0F9514B9006C5449 /* CocoaDeferred_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaDeferred_Prefix.pch; sourceTree = SOURCE_ROOT; };
+		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D2AAC07E0554694100DB518D /* libDeferredKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDeferredKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		229C389A104DE23400CFAA3F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				229C38A3104DE2B900CFAA3F /* libDeferredKit.a in Frameworks */,
+				229C38A4104DE2C600CFAA3F /* UIKit.framework in Frameworks */,
+				229C38A5104DE2CD00CFAA3F /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2AAC07C0554694100DB518D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */,
+				229C37A4104DCFFF00CFAA3F /* UIKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DFFF38A50411DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC07E0554694100DB518D /* libDeferredKit.a */,
+				229C389C104DE23400CFAA3F /* DeferredTest.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* CocoaDeferred */ = {
+			isa = PBXGroup;
+			children = (
+				08FB77AEFE84172EC02AAC07 /* Classes */,
+				32C88DFF0371C24200C91783 /* Other Sources */,
+				0867D69AFE84028FC02AAC07 /* Frameworks */,
+				034768DFFF38A50411DB9C8B /* Products */,
+				229C37A3104DCFFF00CFAA3F /* UIKit.framework */,
+				229C389E104DE23400CFAA3F /* DeferredTest-Info.plist */,
+			);
+			name = CocoaDeferred;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		08FB77AEFE84172EC02AAC07 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				229C38AB104DE34D00CFAA3F /* Tests */,
+				229C3809104DDE4600CFAA3F /* JSON */,
+				229C374C104C756800CFAA3F /* DeferredKit.h */,
+				229C374D104C756800CFAA3F /* DKDeferredTests.m */,
+				229C3771104C76D400CFAA3F /* UIImage+DKDeferred.m */,
+				229C3772104C76D400CFAA3F /* UIImage+DKDeferred.h */,
+				229C374E104C756800CFAA3F /* DKDeferredTests.h */,
+				229C374F104C756800CFAA3F /* DKDeferred+JSON.m */,
+				229C3750104C756800CFAA3F /* DKDeferred+UIKit.m */,
+				229C3751104C756800CFAA3F /* DKDeferred+UIKit.h */,
+				229C3752104C756800CFAA3F /* DKDeferred+CoreLocation.m */,
+				229C3753104C756800CFAA3F /* DKDeferred.m */,
+				229C3754104C756800CFAA3F /* DKDeferred+CoreLocation.h */,
+				229C3755104C756800CFAA3F /* DKDeferred+JSON.h */,
+				229C3756104C756800CFAA3F /* DKDeferred.h */,
+				229C3757104C756800CFAA3F /* DKCallback.h */,
+				229C3758104C756800CFAA3F /* DKMacros.h */,
+				229C3759104C756800CFAA3F /* DKCallback.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		229C3809104DDE4600CFAA3F /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				229C3813104DDE5F00CFAA3F /* SBJSON.m */,
+				229C3814104DDE5F00CFAA3F /* SBJSON.h */,
+				229C3815104DDE5F00CFAA3F /* NSString+SBJSON.m */,
+				229C3816104DDE5F00CFAA3F /* NSObject+SBJSON.m */,
+				229C3817104DDE5F00CFAA3F /* JSON.h */,
+				229C3818104DDE5F00CFAA3F /* SBJsonBase.h */,
+				229C3819104DDE5F00CFAA3F /* SBJsonParser.m */,
+				229C381A104DDE5F00CFAA3F /* SBJsonBase.m */,
+				229C381B104DDE5F00CFAA3F /* SBJsonWriter.m */,
+				229C381C104DDE5F00CFAA3F /* SBJsonParser.h */,
+				229C381D104DDE5F00CFAA3F /* SBJsonWriter.h */,
+				229C381E104DDE5F00CFAA3F /* NSObject+SBJSON.h */,
+				229C381F104DDE5F00CFAA3F /* NSString+SBJSON.h */,
+			);
+			name = JSON;
+			sourceTree = "<group>";
+		};
+		229C38AB104DE34D00CFAA3F /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				229C38AC104DE35C00CFAA3F /* GTM */,
+				229C38C8104DE5C400CFAA3F /* DKDeferredTests.h */,
+				229C38C9104DE5C400CFAA3F /* DKDeferredTests.m */,
+				229C38CE104DE5E400CFAA3F /* DKDeferredJSONTests.h */,
+				229C38CF104DE5E400CFAA3F /* DKDeferredJSONTests.m */,
+				229C390A104DEAC800CFAA3F /* DKCallbackTests.h */,
+				229C390B104DEAC800CFAA3F /* DKCallbackTests.m */,
+			);
+			name = Tests;
+			sourceTree = "<group>";
+		};
+		229C38AC104DE35C00CFAA3F /* GTM */ = {
+			isa = PBXGroup;
+			children = (
+				229C38B6104DE42600CFAA3F /* GTMDefines.h */,
+				229C38AE104DE3E500CFAA3F /* GTMIPhoneUnitTestMain.m */,
+				229C38AF104DE3E500CFAA3F /* GTMSenTestCase.h */,
+				229C38B0104DE3E500CFAA3F /* GTMIPhoneUnitTestDelegate.h */,
+				229C38B1104DE3E500CFAA3F /* GTMIPhoneUnitTestDelegate.m */,
+				229C38B2104DE3E500CFAA3F /* GTMSenTestCase.m */,
+			);
+			name = GTM;
+			sourceTree = "<group>";
+		};
+		32C88DFF0371C24200C91783 /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				AA747D9E0F9514B9006C5449 /* CocoaDeferred_Prefix.pch */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC07A0554694100DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA747D9F0F9514B9006C5449 /* CocoaDeferred_Prefix.pch in Headers */,
+				229C375A104C756800CFAA3F /* DeferredKit.h in Headers */,
+				229C375F104C756800CFAA3F /* DKDeferred+UIKit.h in Headers */,
+				229C3763104C756800CFAA3F /* DKDeferred+JSON.h in Headers */,
+				229C3764104C756800CFAA3F /* DKDeferred.h in Headers */,
+				229C3765104C756800CFAA3F /* DKCallback.h in Headers */,
+				229C3766104C756800CFAA3F /* DKMacros.h in Headers */,
+				229C3774104C76D400CFAA3F /* UIImage+DKDeferred.h in Headers */,
+				229C3821104DDE5F00CFAA3F /* SBJSON.h in Headers */,
+				229C3824104DDE5F00CFAA3F /* JSON.h in Headers */,
+				229C3825104DDE5F00CFAA3F /* SBJsonBase.h in Headers */,
+				229C3829104DDE5F00CFAA3F /* SBJsonParser.h in Headers */,
+				229C382A104DDE5F00CFAA3F /* SBJsonWriter.h in Headers */,
+				229C382B104DDE5F00CFAA3F /* NSObject+SBJSON.h in Headers */,
+				229C382C104DDE5F00CFAA3F /* NSString+SBJSON.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		229C389B104DE23400CFAA3F /* DeferredTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 229C38A1104DE23500CFAA3F /* Build configuration list for PBXNativeTarget "DeferredTest" */;
+			buildPhases = (
+				229C3898104DE23400CFAA3F /* Resources */,
+				229C3899104DE23400CFAA3F /* Sources */,
+				229C389A104DE23400CFAA3F /* Frameworks */,
+				229C38C3104DE48400CFAA3F /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				229C38FF104DE8E000CFAA3F /* PBXTargetDependency */,
+			);
+			name = DeferredTest;
+			productName = DeferredTest;
+			productReference = 229C389C104DE23400CFAA3F /* DeferredTest.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D2AAC07D0554694100DB518D /* DeferredKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "DeferredKit" */;
+			buildPhases = (
+				D2AAC07A0554694100DB518D /* Headers */,
+				D2AAC07B0554694100DB518D /* Sources */,
+				D2AAC07C0554694100DB518D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DeferredKit;
+			productName = CocoaDeferred;
+			productReference = D2AAC07E0554694100DB518D /* libDeferredKit.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "CocoaDeferred" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			mainGroup = 0867D691FE84028FC02AAC07 /* CocoaDeferred */;
+			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC07D0554694100DB518D /* DeferredKit */,
+				229C389B104DE23400CFAA3F /* DeferredTest */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		229C3898104DE23400CFAA3F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		229C38C3104DE48400CFAA3F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"google-toolbox-for-mac-read-only/UnitTesting/RunIPhoneUnitTest.sh\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		229C3899104DE23400CFAA3F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				229C38B3104DE3E500CFAA3F /* GTMIPhoneUnitTestMain.m in Sources */,
+				229C38B4104DE3E500CFAA3F /* GTMIPhoneUnitTestDelegate.m in Sources */,
+				229C38B5104DE3E500CFAA3F /* GTMSenTestCase.m in Sources */,
+				229C38CA104DE5C400CFAA3F /* DKDeferredTests.m in Sources */,
+				229C38D0104DE5E400CFAA3F /* DKDeferredJSONTests.m in Sources */,
+				229C390C104DEAC800CFAA3F /* DKCallbackTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2AAC07B0554694100DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				229C375D104C756800CFAA3F /* DKDeferred+JSON.m in Sources */,
+				229C375E104C756800CFAA3F /* DKDeferred+UIKit.m in Sources */,
+				229C3761104C756800CFAA3F /* DKDeferred.m in Sources */,
+				229C3767104C756800CFAA3F /* DKCallback.m in Sources */,
+				229C3773104C76D400CFAA3F /* UIImage+DKDeferred.m in Sources */,
+				229C3820104DDE5F00CFAA3F /* SBJSON.m in Sources */,
+				229C3822104DDE5F00CFAA3F /* NSString+SBJSON.m in Sources */,
+				229C3823104DDE5F00CFAA3F /* NSObject+SBJSON.m in Sources */,
+				229C3826104DDE5F00CFAA3F /* SBJsonParser.m in Sources */,
+				229C3827104DDE5F00CFAA3F /* SBJsonBase.m in Sources */,
+				229C3828104DDE5F00CFAA3F /* SBJsonWriter.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		229C38FF104DE8E000CFAA3F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2AAC07D0554694100DB518D /* DeferredKit */;
+			targetProxy = 229C38FE104DE8E000CFAA3F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB921F08733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/CocoaDeferred.dst;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = CocoaDeferred_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = DeferredKit;
+			};
+			name = Debug;
+		};
+		1DEB922008733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				DSTROOT = /tmp/CocoaDeferred.dst;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = CocoaDeferred_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = CocoaDeferred;
+			};
+			name = Release;
+		};
+		1DEB922308733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ./Source;
+				OTHER_LDFLAGS = "-ObjC";
+				PREBINDING = NO;
+				SDKROOT = iphoneos3.0;
+			};
+			name = Debug;
+		};
+		1DEB922408733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PREBINDING = NO;
+				SDKROOT = iphoneos3.0;
+			};
+			name = Release;
+		};
+		229C389F104DE23500CFAA3F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/UIKit.framework/Headers/UIKit.h";
+				INFOPLIST_FILE = "DeferredTest-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_CFLAGS = "-fnested-functions";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					UIKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = DeferredTest;
+				SDKROOT = iphoneos3.0;
+			};
+			name = Debug;
+		};
+		229C38A0104DE23500CFAA3F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/UIKit.framework/Headers/UIKit.h";
+				INFOPLIST_FILE = "DeferredTest-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					UIKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = DeferredTest;
+				SDKROOT = iphoneos2.1;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "DeferredKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB921F08733DC00010E9CD /* Debug */,
+				1DEB922008733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "CocoaDeferred" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB922308733DC00010E9CD /* Debug */,
+				1DEB922408733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		229C38A1104DE23500CFAA3F /* Build configuration list for PBXNativeTarget "DeferredTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				229C389F104DE23500CFAA3F /* Debug */,
+				229C38A0104DE23500CFAA3F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}
