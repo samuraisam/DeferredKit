@@ -2,7 +2,7 @@
 
 DeferredKit is an asynchronous library for cocoa built around the idea of a [Deferred Object](http://twistedmatrix.com/projects/core/documentation/howto/defer.html) - that is, "an object created to encapsulate a sequence of callbacks in response to an object that may not yet be available." Besides the core class, DKDeferred, much other functionality is included in this project, including an asynchronous URL loading API, an asynchronous disk cache, and a JSON-RPC implementation.
 
-DeferredKit is modeled after the deferred class by  [TwistedMatrix's](http://twistedmatrix.com/) and inspired by [MochiKit's](http://www.mochikit.com/doc/html/MochiKit/Async.html#fn-deferred) implementation of Deferred.
+DeferredKit is modeled after the deferred class by  [TwistedMatrix](http://twistedmatrix.com/) and inspired by [MochiKit's](http://www.mochikit.com/doc/html/MochiKit/Async.html#fn-deferred) implementation of Deferred.
 
 The DKDeferred implementation is not dependent upon threads or any other form of concurrency for it's operation (however, you may create threaded Deferred's) and operates in the same environment as the rest of your Objective-C program.
 
@@ -11,34 +11,132 @@ The DKDeferred implementation is not dependent upon threads or any other form of
 ## Installing DeferredKit
 1. Copy the entire source tree into your projects directory.
 2. Add DeferredKit to your project.
-  * Copy "{PROJECT_ROOT}/DeferredKit/CocoaDeferred/CocoaDeferred.xcodeproj"
-  * In the window presented by Xcode, uncheck "Copy items...". Reference type should be "Relative to Project"
-  * Uncheck any targets Xcode might automatically assume.
+    * Copy "{PROJECT_ROOT}/DeferredKit/CocoaDeferred/CocoaDeferred.xcodeproj"
+    * In the window presented by Xcode, uncheck "Copy items...". Reference type should be "Relative to Project"
+    * Uncheck any targets Xcode might automatically assume.
 3. Add DeferredKit to your header search paths.
-  * Under your target's build settings, search for find "Header Search Paths" and add "DeferredKit/CocoaDeferred/Source"
+    * Under your target's build settings, search for find "Header Search Paths" and add "DeferredKit/CocoaDeferred/Source"
 4. Add DeferredKit to your Target
-  * Under your target's general settings, under Direct Dependancies click the "+" button and choose "DeferredKit"
+    * Under your target's general settings, under Direct Dependancies click the "+" button and choose "DeferredKit"
 5. Expand your "CocoaDeferred.xcodeproj" and drag "libDeferredKit.a" to your target's "Link Binary with Library"
 
 ## Example Usage
-### Deferred URL Loading
+### Asynchronous URL Loading
+All methods in DeferredKit return Deferred objects. This is the same basic interface used to access all functionality provided by DeferredKit.
 
-    - (void)userTouchedGo:(id)sender {
-    		DKDeferred *d = [DKDeferred loadURL:@"http://google.com/"];
-    		[d addCallback:callbackTS(self, googleDidLoad:);
-    		[d addErrback:callbackTS(self, googleFailedToLoad:);
+    id cbGotResource(id results) {
+      [[Resource resourceWithData:results] save];
+      return nil;
     }
 
-    - (id)googleDidLoad:(id)result { // in this case, an NSData object
-    		[loadingView removeFromSuperview];
-    		[webView loadHTMLString:[NSString stringWithUTF8String:[result bytes]]
-    										baseURL:[NSURL URLWithString:@"google.com"]];
-    		[view addSubview:webView];
-    		return nil;
+    id cbGetResourceFailed(id error) {
+      // alert user resource is unavailable.
+      return nil;
     }
 
-    - (id)googleFailedToLoad:(NSError *)result {
-    		// tell the user the internet is down.
-    		return nil;
+    DKDeferred *d = [DKDeferred loadURL:@"http://addr.net/resource/"];
+    [d addCallback:callbackP(cbGotResource)];
+    [d addCallback:callbackP(cbGetResourceFailed)];
+
+### Asynchronous processing
+You can generate Deferred objects which encapsulate the execution of a method or function in a thread. The Deferred automatically returns the result to the correct thread.
+
+    id cbDoneProcessing(id results) {
+      if (content) {
+        [content release];
+        content = nil;
+      }
+      content = [results retain];
+      [tableView reloadData];
+      return nil;
+    }
+    
+    DKDefered *d =[DKDeferred deferInThread:
+                   callbackTS((id)[Resource class], updateAllResources:)];
+    [d addCallback:cbDoneProcessing];
+
+### Combining Asynchronous tasks
+These two Deferred objects may return almost immediately if loaded from the cache.
+
+    - (IBAction)loadResource:(id)sender {
+      DKDeferred *html = [DKDeferred loadURL:@"http://url1.com/resource" cached:YES];
+      DKDeferred *header = [DKDeferred loadImage:@"http://url1.com/resource-img.png" cached:YES];
+    
+      DKDeferred *d = [DKDeferred gatherResults:array_(html, header)];
+      [d addCalback:callbackTS(self, cbDoneLoading:)];
+    }
+    
+    - (id)cbDoneLoading:(id)results {
+      [self showHTML:[results objectAtIndex:0]];
+      [self showHeaderImage:[results objectAtIndex:1]];
+      return nil;
     }
 
+### Interacting with a JSON-RPC Service
+DeferredKit provides a JSON-RPC implementation using DKDeferred.
+
+    id myservice = [DKDeferred jsonService:@"" name:@"myservice"]
+    DKDeferred *d = [myservice someMethod:array(arg1, arg2)]
+    [d addCallbacks:callbackTS(self, cbGotResults:) :callbackTS(cbGetResultsFailed:)];
+
+
+## Reference
+
+### DKDeferred
+#### Properties
+##### @property(readonly) int fired
+##### @property(readonly) int paused
+##### @property(readonly) NSArray *results
+##### @property(readonly) BOOL silentlyCancelled
+##### @property(readwrite) BOOL chained
+##### @property(readonly) id<DKCallback> canceller
+##### @property(readonly) NSString *deferredID
+##### @property(readwrite, retain) id<DKCallback> finalizer
+#### Class Methods
+##### +[DKDeferred deferred]
+##### +[DKDeferred maybeDeferred:(id<DKCallback>)maybeDeferred]
+##### +[DKDeferred gatherResuls:(NSArray *)listOfDeferreds]
+##### +[DKDeferred succeed:(id)resultOrNil]
+##### +[DKDeferred fail:(id)resultOrNil]
+##### +[DKDeferred wait:(NSTimeInterval)seconds value:(id)callbackWithOrNil]
+##### +[DKDeferred callLater:(NSTimeInterval)seconds func:(id<DKCallback>)function]
+##### +[DKDeferred deferInThread:(id<DKCallback>)function withObject:(id)argOrNil]
+##### +[DKDeferred loadURL:(NSString *)url]
+##### +[DKDeferred loadURL:(NSString *)url cached:(BOOL)cached]
+#### Instance Methods
+##### -[DKDeferred initWithCanceller:(id<DKCallback>)cancellerFunctionOrNil]
+##### -[DKDeferred addBoth:(id<DKCallback>)function]
+##### -[DKDeferred addCallback:(id<DKCallback>)function]
+##### -[DKDeferred addErrback:(id<DKCallback>)function]
+##### -[DKDeferred addCallbacks:(id<DKCallback>)callback :(id<DKCallback>)errback]
+##### -[DKDeferred cancel]
+##### -[DKDeferred callback:(id)resultOrNil]
+##### -[DKDeferred errback:(id)resltOrNil]
+
+### DKDeferred (JSONAdditions)
+#### Class Methods
+##### +[DKDeferred loadJSONDoc:(NSString *)url]
+##### +[DKDeferred jsonService:(NSString *)url name:(NSString *)serviceName]
+
+### DKDeferred (UIKitAdditions)
+#### Class Methods
+##### +[DKDeferred loadImage:(NSString *)url cached:(BOOL)cached]
+##### +[DKDeferred loadImage:(NSString *)url sizeTo:(CGSize)finalSize cached:(BOOL)cached]
+
+### DKDeferredList
+#### Properties
+##### @property(readwrite, assign) BOOL fireOnOneCallback
+##### @property(readwrite, assign) BOOL fireOneOneErrback
+##### @property(readwrite, assign) BOOL consumeErrors
+##### @property(readonly) int finishedCount
+#### Class Methods
+##### +[DKDeferred deferredList:(NSArray *)listOfDeferreds]
+##### +[DKDeferred deferredList:(NSArray *)listOfDeferreds withCanceller:(id<DKCallback>)cancellerFuncOrNil]
+#### Instance Methods
+##### -[DKDeferred initWithList:(NSArray *)listOfDeferreds withCanceller:(id<DKCallback>)cancellerFuncOrNil fireOnOneCallback:(BOOL)fireFirstResult fireOnOneErrback:(BOOL)fireFirstError consumeErrors:(BOOL)continueChainOnError]
+  
+### DKCallback
+#### Macros
+#### Properties
+#### Class Methods
+#### Instance Methods
