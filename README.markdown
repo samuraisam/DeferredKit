@@ -79,6 +79,59 @@ DeferredKit provides a JSON-RPC implementation using DKDeferred.
     DKDeferred *d = [myservice someMethod:array(arg1, arg2)]
     [d addCallbacks:callbackTS(self, cbGotResults:) :callbackTS(cbGetResultsFailed:)];
 
+### Asynchronous processing chain
+Each callback added to a DKDeferred results in a chain of callbacks - the last callback added will be called with the result returned by the previous callback.
+
+    - (IBAction)fetchResources:(id)sender {
+      id _parseResults:(id results) {
+        // _parseResults can return an NSError at which point the deferred
+        // will begin it's error callback chain
+        return [Resource arrayWithJSONResponse:results];
+      }
+      
+      DKDeferred *d = [DKDeferred loadJSONDoc:@"http://whereitsat.net/resource/"]
+      [d addCallback:callbackP(_parseResults)];
+      [d addCallback:callbackTS(self, _presentResources:)];
+      [d addErrback:callbackTS(self, _getResourcesFailed:)];
+    }
+    
+    - (id)_presentResources:(id)results {
+      if (resources) {
+        [resources release];
+        resources = nil;
+      }
+      resources = [results retain];
+      [tableView reloadData];
+    }
+
+### Asynchronous disk cache
+Since the disk cache utilizes a deferred object interface, access to cached results can implement caching in only a few lines.
+
+    - (IBAction)fetchSomeStuff:(id)sender {
+      id _gotKey(id results) {
+        if (results == [NSNull null]) { // cache miss
+          return [DKDeferred deferInThread:[Resource getResources] withObject:nil];
+        } else { // cache hit
+          return results;
+        }
+      }
+      DKDeferred *d = [[DKDeferredCache sharedCache] valueForKey:@"someKey"];
+      [d addCallback:callbackP(_gotKey)];
+      [d addCallback:callbackTS(self, cbGotResults:)];
+    }
+    
+    - (id)cbGotResults:(id)results {
+      if (isDeferred(results)) // in the event of a cache miss
+        return [results addCallback:callbackTS(self, cbGotResults:)];
+      if (resources) {
+        [resources release];
+        resources = nil;
+      }
+      resources = [results retain];
+      [tableView reloadData];
+    }
+    
+    
 
 ## Reference
 
@@ -116,7 +169,7 @@ DeferredKit provides a JSON-RPC implementation using DKDeferred.
 ### DKDeferred (JSONAdditions)
 #### Class Methods
 ##### +[DKDeferred loadJSONDoc:(NSString *)url]
-##### +[DKDeferred jsonService:(NSString *)url name:(NSString *)serviceName]
+##### +[DKDeferred jsonService:(NSString \*)url name:(NSString \*)serviceName]
 
 ### DKDeferred (UIKitAdditions)
 #### Class Methods
@@ -134,9 +187,34 @@ DeferredKit provides a JSON-RPC implementation using DKDeferred.
 ##### +[DKDeferred deferredList:(NSArray *)listOfDeferreds withCanceller:(id<DKCallback>)cancellerFuncOrNil]
 #### Instance Methods
 ##### -[DKDeferred initWithList:(NSArray *)listOfDeferreds withCanceller:(id<DKCallback>)cancellerFuncOrNil fireOnOneCallback:(BOOL)fireFirstResult fireOnOneErrback:(BOOL)fireFirstError consumeErrors:(BOOL)continueChainOnError]
-  
+
+### DKCache
+#### Class Methods
+##### +[DKDeferredCache sharedCache]
+#### Instance Methods
+##### -[DKDeferredCache setValue:(NSObject \*)val forKey:(NSString \*)key timeout:(NSTimeInterval)secondsUntilInvalid]
+##### -[DKDeferredCache valueForKey:(NSString *)key]
+##### -[DKDeferredCache deleteValueForKey:(NSString *)key]
+##### -[DKDeferredCache getManyValues:(NSArray *)listOfKeys]
+##### -[DKDeferredCache hasKey:(NSString *)key]
+##### -[DKDeferredCache incr:(NSString *)key delta:(int)numToIncrementBy]
+##### -[DKDeferredCache decr:(NSString *)key delta:(int)numToDecrementBy]
+
+### NSObject (DKDeferredCache)
+#### Class Methods
+##### +[NSObject canBeStoredInCache]
+
 ### DKCallback
 #### Macros
-#### Properties
+##### callbackP(selector) -> [DKCallback fromPointer:(dkCallback)functionPointer]
+##### callbackTS(target, selector) -> [DKCallback fromSelector:@selector(selector) target:target]
+##### callbackS(selector) -> [DKCallback fromSelector:@selector(selector)]
+##### callbackI(invocation, argIndex) -> [DKCallback fromInvocation:invocation parameterIndex:argIndex]
 #### Class Methods
+##### +[DKCallback fromSelector:(SEL)selector]
+##### +[DKCallback fromSelector:(SEL)selector target:(id)target]
+##### +[DKCallback fromPointer:(dkCallback)functionPointer]
+##### +[DKCallback fromInvocation:(NSInvocation *)invocation parameterIndex:(NSUInteger)argIndex]
 #### Instance Methods
+##### -[DKCallback andThen:(DKCallback *)other]
+##### -[DKCallback composeWith:(DKCallback *)other]
