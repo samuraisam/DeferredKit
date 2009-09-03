@@ -11,14 +11,14 @@ The DKDeferred implementation is not dependent upon threads or any other form of
 ## Installing DeferredKit
 1. Copy the entire source tree into your projects directory.
 2. Add DeferredKit to your project.
-    * Copy "{PROJECT_ROOT}/DeferredKit/CocoaDeferred/CocoaDeferred.xcodeproj"
+    * Copy `"{PROJECT_ROOT}/DeferredKit/CocoaDeferred/CocoaDeferred.xcodeproj"`
     * In the window presented by Xcode, uncheck "Copy items...". Reference type should be "Relative to Project"
     * Uncheck any targets Xcode might automatically assume.
 3. Add DeferredKit to your header search paths.
-    * Under your target's build settings, search for find "Header Search Paths" and add "DeferredKit/CocoaDeferred/Source"
+    * Under your target's build settings, search for find "Header Search Paths" and add `"DeferredKit/CocoaDeferred/Source"`
 4. Add DeferredKit to your Target
     * Under your target's general settings, under Direct Dependancies click the "+" button and choose "DeferredKit"
-5. Expand your "CocoaDeferred.xcodeproj" and drag "libDeferredKit.a" to your target's "Link Binary with Library"
+5. Expand your `"CocoaDeferred.xcodeproj"` and drag `"libDeferredKit.a"` to your target's "Link Binary with Library"
 
 ## Example Usage
 ### Asynchronous URL Loading
@@ -137,8 +137,8 @@ Since the disk cache utilizes a deferred object interface, access to cached resu
 
 ### DKDeferred
 #### Properties
-##### @property(readonly) int fired
-##### @property(readonly) int paused
+##### `@property(readonly) int fired`
+##### `@property(readonly) int paused`
 ##### @property(readonly) NSArray *results
 ##### @property(readonly) BOOL silentlyCancelled
 ##### @property(readwrite) BOOL chained
