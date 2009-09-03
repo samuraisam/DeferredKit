@@ -130,91 +130,89 @@ Since the disk cache utilizes a deferred object interface, access to cached resu
       resources = [results retain];
       [tableView reloadData];
     }
-    
-    
 
 ## Reference
 
 ### DKDeferred
 #### Properties
-##### `@property(readonly) int fired`
-##### `@property(readonly) int paused`
-##### @property(readonly) NSArray *results
-##### @property(readonly) BOOL silentlyCancelled
-##### @property(readwrite) BOOL chained
-##### @property(readonly) id<DKCallback> canceller
-##### @property(readonly) NSString *deferredID
-##### @property(readwrite, retain) id<DKCallback> finalizer
+### `@property(readonly) int fired`
+### `@property(readonly) int paused`
+### `@property(readonly) NSArray *results`
+### `@property(readonly) BOOL silentlyCancelled`
+### `@property(readwrite) BOOL chained`
+### `@property(readonly) id<DKCallback> canceller`
+### `@property(readonly) NSString *deferredID`
+### `@property(readwrite, retain) id<DKCallback> finalizer`
 #### Class Methods
-##### +[DKDeferred deferred]
-##### +[DKDeferred maybeDeferred:(id<DKCallback>)maybeDeferred]
-##### +[DKDeferred gatherResuls:(NSArray *)listOfDeferreds]
-##### +[DKDeferred succeed:(id)resultOrNil]
-##### +[DKDeferred fail:(id)resultOrNil]
-##### +[DKDeferred wait:(NSTimeInterval)seconds value:(id)callbackWithOrNil]
-##### +[DKDeferred callLater:(NSTimeInterval)seconds func:(id<DKCallback>)function]
-##### +[DKDeferred deferInThread:(id<DKCallback>)function withObject:(id)argOrNil]
-##### +[DKDeferred loadURL:(NSString *)url]
-##### +[DKDeferred loadURL:(NSString *)url cached:(BOOL)cached]
+### `+[DKDeferred deferred]`
+### `+[DKDeferred maybeDeferred:(id<DKCallback>)maybeDeferred]`
+### `+[DKDeferred gatherResuls:(NSArray *)listOfDeferreds]`
+### `+[DKDeferred succeed:(id)resultOrNil]`
+### `+[DKDeferred fail:(id)resultOrNil]`
+### `+[DKDeferred wait:(NSTimeInterval)seconds value:(id)callbackWithOrNil]`
+### `+[DKDeferred callLater:(NSTimeInterval)seconds func:(id<DKCallback>)function]`
+### `+[DKDeferred deferInThread:(id<DKCallback>)function withObject:(id)argOrNil]`
+### `+[DKDeferred loadURL:(NSString *)url]`
+### `+[DKDeferred loadURL:(NSString *)url cached:(BOOL)cached]`
 #### Instance Methods
-##### -[DKDeferred initWithCanceller:(id<DKCallback>)cancellerFunctionOrNil]
-##### -[DKDeferred addBoth:(id<DKCallback>)function]
-##### -[DKDeferred addCallback:(id<DKCallback>)function]
-##### -[DKDeferred addErrback:(id<DKCallback>)function]
-##### -[DKDeferred addCallbacks:(id<DKCallback>)callback :(id<DKCallback>)errback]
-##### -[DKDeferred cancel]
-##### -[DKDeferred callback:(id)resultOrNil]
-##### -[DKDeferred errback:(id)resltOrNil]
+### `-[DKDeferred initWithCanceller:(id<DKCallback>)cancellerFunctionOrNil]`
+### `-[DKDeferred addBoth:(id<DKCallback>)function]`
+### `-[DKDeferred addCallback:(id<DKCallback>)function]`
+### `-[DKDeferred addErrback:(id<DKCallback>)function]`
+### `-[DKDeferred addCallbacks:(id<DKCallback>)callback :(id<DKCallback>)errback]`
+### `-[DKDeferred cancel]`
+### `-[DKDeferred callback:(id)resultOrNil]`
+### `-[DKDeferred errback:(id)resltOrNil]`
 
 ### DKDeferred (JSONAdditions)
 #### Class Methods
-##### +[DKDeferred loadJSONDoc:(NSString *)url]
-##### +[DKDeferred jsonService:(NSString \*)url name:(NSString \*)serviceName]
+### `+[DKDeferred loadJSONDoc:(NSString *)url]`
+### `+[DKDeferred jsonService:(NSString *)url name:(NSString *)serviceName]`
 
 ### DKDeferred (UIKitAdditions)
 #### Class Methods
-##### +[DKDeferred loadImage:(NSString *)url cached:(BOOL)cached]
-##### +[DKDeferred loadImage:(NSString *)url sizeTo:(CGSize)finalSize cached:(BOOL)cached]
+### `+[DKDeferred loadImage:(NSString *)url cached:(BOOL)cached]`
+### `+[DKDeferred loadImage:(NSString *)url sizeTo:(CGSize)finalSize cached:(BOOL)cached]`
 
 ### DKDeferredList
 #### Properties
-##### @property(readwrite, assign) BOOL fireOnOneCallback
-##### @property(readwrite, assign) BOOL fireOneOneErrback
-##### @property(readwrite, assign) BOOL consumeErrors
-##### @property(readonly) int finishedCount
+### `@property(readwrite, assign) BOOL fireOnOneCallback`
+### `@property(readwrite, assign) BOOL fireOneOneErrback`
+### `@property(readwrite, assign) BOOL consumeErrors`
+### `@property(readonly) int finishedCount`
 #### Class Methods
-##### +[DKDeferred deferredList:(NSArray *)listOfDeferreds]
-##### +[DKDeferred deferredList:(NSArray *)listOfDeferreds withCanceller:(id<DKCallback>)cancellerFuncOrNil]
+### `+[DKDeferred deferredList:(NSArray *)listOfDeferreds]`
+### `+[DKDeferred deferredList:(NSArray *)listOfDeferreds withCanceller:(id<DKCallback>)cancellerFuncOrNil]`
 #### Instance Methods
-##### -[DKDeferred initWithList:(NSArray *)listOfDeferreds withCanceller:(id<DKCallback>)cancellerFuncOrNil fireOnOneCallback:(BOOL)fireFirstResult fireOnOneErrback:(BOOL)fireFirstError consumeErrors:(BOOL)continueChainOnError]
+### `-[DKDeferred initWithList:(NSArray *)listOfDeferreds withCanceller:(id<DKCallback>)cancellerFuncOrNil fireOnOneCallback:(BOOL)fireFirstResult fireOnOneErrback:(BOOL)fireFirstError consumeErrors:(BOOL)continueChainOnError]`
 
 ### DKCache
 #### Class Methods
-##### +[DKDeferredCache sharedCache]
+### `+[DKDeferredCache sharedCache]`
 #### Instance Methods
-##### -[DKDeferredCache setValue:(NSObject \*)val forKey:(NSString \*)key timeout:(NSTimeInterval)secondsUntilInvalid]
-##### -[DKDeferredCache valueForKey:(NSString *)key]
-##### -[DKDeferredCache deleteValueForKey:(NSString *)key]
-##### -[DKDeferredCache getManyValues:(NSArray *)listOfKeys]
-##### -[DKDeferredCache hasKey:(NSString *)key]
-##### -[DKDeferredCache incr:(NSString *)key delta:(int)numToIncrementBy]
-##### -[DKDeferredCache decr:(NSString *)key delta:(int)numToDecrementBy]
+### `-[DKDeferredCache setValue:(NSObject *)val forKey:(NSString *)key timeout:(NSTimeInterval)secondsUntilInvalid]`
+### `-[DKDeferredCache valueForKey:(NSString *)key]`
+### `-[DKDeferredCache deleteValueForKey:(NSString *)key]`
+### `-[DKDeferredCache getManyValues:(NSArray *)listOfKeys]`
+### `-[DKDeferredCache hasKey:(NSString *)key]`
+### `-[DKDeferredCache incr:(NSString *)key delta:(int)numToIncrementBy]`
+### `-[DKDeferredCache decr:(NSString *)key delta:(int)numToDecrementBy]`
 
 ### NSObject (DKDeferredCache)
 #### Class Methods
-##### +[NSObject canBeStoredInCache]
+### `+[NSObject canBeStoredInCache]`
 
 ### DKCallback
 #### Macros
-##### callbackP(selector) -> [DKCallback fromPointer:(dkCallback)functionPointer]
-##### callbackTS(target, selector) -> [DKCallback fromSelector:@selector(selector) target:target]
-##### callbackS(selector) -> [DKCallback fromSelector:@selector(selector)]
-##### callbackI(invocation, argIndex) -> [DKCallback fromInvocation:invocation parameterIndex:argIndex]
+### `callbackP(selector) -> [DKCallback fromPointer:(dkCallback)functionPointer]`
+### `callbackTS(target, selector) -> [DKCallback fromSelector:@selector(selector) target:target]`
+### `callbackS(selector) -> [DKCallback fromSelector:@selector(selector)]`
+### `callbackI(invocation, argIndex) -> [DKCallback fromInvocation:invocation parameterIndex:argIndex]`
 #### Class Methods
-##### +[DKCallback fromSelector:(SEL)selector]
-##### +[DKCallback fromSelector:(SEL)selector target:(id)target]
-##### +[DKCallback fromPointer:(dkCallback)functionPointer]
-##### +[DKCallback fromInvocation:(NSInvocation *)invocation parameterIndex:(NSUInteger)argIndex]
+### `+[DKCallback fromSelector:(SEL)selector]`
+### `+[DKCallback fromSelector:(SEL)selector target:(id)target]`
+### `+[DKCallback fromPointer:(dkCallback)functionPointer]`
+### `+[DKCallback fromInvocation:(NSInvocation *)invocation parameterIndex:(NSUInteger)argIndex]`
 #### Instance Methods
-##### -[DKCallback andThen:(DKCallback *)other]
-##### -[DKCallback composeWith:(DKCallback *)other]
+### `-[DKCallback andThen:(DKCallback *)other]`
+### `-[DKCallback composeWith:(DKCallback *)other]`
