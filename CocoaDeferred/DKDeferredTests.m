@@ -45,12 +45,12 @@
 - (void)testCallback {
 	id _deferredCallback(id r) {
 		NSLog(@"hello hello hello");
-		STAssertEqualStrings(r, @"this is a callback mother fucker", @"callback content", nil);
+		STAssertEqualStrings(r, @"this is a callback mother chicken pluckerer", @"callback content", nil);
 		return nil;
 	}
 	DKDeferred *d = [DKDeferred deferred];
 	[d addCallback:callbackP(_deferredCallback)];
-	[d callback:@"this is a callback mother fucker"];
+	[d callback:@"this is a callback mother chicken pluckerer"];
 }
 
 - (void)testErrback {
@@ -77,7 +77,7 @@
 
 - (id)_pauseTestCallback:(id)r {
 	NSLog(@"pauseTestCallback");
-	STAssertEqualStrings(r, @"this is a callback mother fucker", @"callback content", nil);
+	STAssertEqualStrings(r, @"this is a callback mother chicken pluckerer", @"callback content", nil);
 	STAssertEqualStrings(_pauseTestResult, @"this has been altered", @"paused state change content", nil);
 	[_pauseTestResult release];
 	_pauseTestResult = [r retain];
@@ -90,10 +90,10 @@
 	[d addCallback:callbackTS(self, _pauseTestCallback:)];
 	STAssertNil(_pauseTestResult, @"", nil);
 	_pauseTestResult = [@"this has been altered" retain];
-	[d callback:@"this is a callback mother fucker"];
+	[d callback:@"this is a callback mother chicken pluckerer"];
 	STAssertEqualStrings(_pauseTestResult, @"this has been altered", @"paused state change content", nil);
 	[d resume];
-	STAssertEqualStrings(_pauseTestResult, @"this is a callback mother fucker", @"after resume change content", nil);
+	STAssertEqualStrings(_pauseTestResult, @"this is a callback mother chicken pluckerer", @"after resume change content", nil);
 }
 
 - (void)testChained {}
@@ -102,7 +102,7 @@
 	id _cbDeferredList(id r) {
 		//NSLog(@"deferredList:%@", r);
 		STAssertTrue([r isKindOfClass:[NSArray class]], @"deferred list type", nil);
-//		STAssertEqualStrings(r, @"this is a callback mother fucker", @"callback content", nil);
+//		STAssertEqualStrings(r, @"this is a callback mother chicken pluckerer", @"callback content", nil);
 		return nil;
 	}
 	id _cbReturnValue(id results) {
