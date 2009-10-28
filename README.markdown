@@ -134,6 +134,7 @@ Since the disk cache utilizes a deferred object interface, access to cached resu
 ## Reference
 
 ### DKDeferred
+
 #### Properties
 ### `@property(readonly) int fired`
 ### `@property(readonly) int paused`
@@ -143,9 +144,12 @@ Since the disk cache utilizes a deferred object interface, access to cached resu
 ### `@property(readonly) id<DKCallback> canceller`
 ### `@property(readonly) NSString *deferredID`
 ### `@property(readwrite, retain) id<DKCallback> finalizer`
+
 #### Class Methods
 ### `+[DKDeferred deferred]`
+  > Returns an empty `DKDeferred`
 ### `+[DKDeferred maybeDeferred:(id<DKCallback>)maybeDeferred]`
+  > 
 ### `+[DKDeferred gatherResuls:(NSArray *)listOfDeferreds]`
 ### `+[DKDeferred succeed:(id)resultOrNil]`
 ### `+[DKDeferred fail:(id)resultOrNil]`
@@ -154,6 +158,7 @@ Since the disk cache utilizes a deferred object interface, access to cached resu
 ### `+[DKDeferred deferInThread:(id<DKCallback>)function withObject:(id)argOrNil]`
 ### `+[DKDeferred loadURL:(NSString *)url]`
 ### `+[DKDeferred loadURL:(NSString *)url cached:(BOOL)cached]`
+
 #### Instance Methods
 ### `-[DKDeferred initWithCanceller:(id<DKCallback>)cancellerFunctionOrNil]`
 ### `-[DKDeferred addBoth:(id<DKCallback>)function]`
@@ -164,31 +169,39 @@ Since the disk cache utilizes a deferred object interface, access to cached resu
 ### `-[DKDeferred callback:(id)resultOrNil]`
 ### `-[DKDeferred errback:(id)resltOrNil]`
 
+
 ### DKDeferred (JSONAdditions)
+
 #### Class Methods
 ### `+[DKDeferred loadJSONDoc:(NSString *)url]`
 ### `+[DKDeferred jsonService:(NSString *)url name:(NSString *)serviceName]`
 
 ### DKDeferred (UIKitAdditions)
+
 #### Class Methods
 ### `+[DKDeferred loadImage:(NSString *)url cached:(BOOL)cached]`
 ### `+[DKDeferred loadImage:(NSString *)url sizeTo:(CGSize)finalSize cached:(BOOL)cached]`
 
 ### DKDeferredList
+
 #### Properties
 ### `@property(readwrite, assign) BOOL fireOnOneCallback`
 ### `@property(readwrite, assign) BOOL fireOneOneErrback`
 ### `@property(readwrite, assign) BOOL consumeErrors`
 ### `@property(readonly) int finishedCount`
+
 #### Class Methods
 ### `+[DKDeferred deferredList:(NSArray *)listOfDeferreds]`
 ### `+[DKDeferred deferredList:(NSArray *)listOfDeferreds withCanceller:(id<DKCallback>)cancellerFuncOrNil]`
+
 #### Instance Methods
 ### `-[DKDeferred initWithList:(NSArray *)listOfDeferreds withCanceller:(id<DKCallback>)cancellerFuncOrNil fireOnOneCallback:(BOOL)fireFirstResult fireOnOneErrback:(BOOL)fireFirstError consumeErrors:(BOOL)continueChainOnError]`
 
 ### DKCache
+
 #### Class Methods
 ### `+[DKDeferredCache sharedCache]`
+
 #### Instance Methods
 ### `-[DKDeferredCache setValue:(NSObject *)val forKey:(NSString *)key timeout:(NSTimeInterval)secondsUntilInvalid]`
 ### `-[DKDeferredCache valueForKey:(NSString *)key]`
@@ -199,20 +212,24 @@ Since the disk cache utilizes a deferred object interface, access to cached resu
 ### `-[DKDeferredCache decr:(NSString *)key delta:(int)numToDecrementBy]`
 
 ### NSObject (DKDeferredCache)
+
 #### Class Methods
 ### `+[NSObject canBeStoredInCache]`
 
 ### DKCallback
+
 #### Macros
 ### `callbackP(selector) -> [DKCallback fromPointer:(dkCallback)functionPointer]`
 ### `callbackTS(target, selector) -> [DKCallback fromSelector:@selector(selector) target:target]`
 ### `callbackS(selector) -> [DKCallback fromSelector:@selector(selector)]`
 ### `callbackI(invocation, argIndex) -> [DKCallback fromInvocation:invocation parameterIndex:argIndex]`
+
 #### Class Methods
 ### `+[DKCallback fromSelector:(SEL)selector]`
 ### `+[DKCallback fromSelector:(SEL)selector target:(id)target]`
 ### `+[DKCallback fromPointer:(dkCallback)functionPointer]`
 ### `+[DKCallback fromInvocation:(NSInvocation *)invocation parameterIndex:(NSUInteger)argIndex]`
+
 #### Instance Methods
 ### `-[DKCallback andThen:(DKCallback *)other]`
 ### `-[DKCallback composeWith:(DKCallback *)other]`

@@ -11,28 +11,42 @@
 
 @implementation DKDeferred (UIKitAdditions)
 
-+ (id)loadImage:(NSString *)aUrl cached:(BOOL)cached {
++ (id)loadImage:(NSString *)aUrl cached:(BOOL)cached paused:(BOOL)_paused {
 	DKDeferred *d;
-	if (cached)
-		d = [[[DKDeferredCache sharedCache] valueForKey:aUrl]
-				 addBoth:curryTS((id)self, @selector(_cachedLoadURLCallback:results:), aUrl)];
-	else
-		d = [self loadURL:aUrl];
-		[d addBoth:curryTS((id)self, @selector(_loadImageCallback:results:), aUrl)];
+	if (cached) {
+		d = [[DKDeferredCache sharedCache] valueForKey:aUrl];
+		if (_paused)
+			[d pause];
+		[d addBoth:curryTS((id)self, @selector(_cachedLoadURLCallback:results:), aUrl)];
+	} else {
+		d = [self loadURL:aUrl paused:_paused];
+	}
+	[d addBoth:curryTS((id)self, @selector(_loadImageCallback:results:), aUrl)];
 	return d;
 }
 
-+ (id)loadImage:(NSString *)aUrl sizeTo:(CGSize)size cached:(BOOL)cached {
++ (id)loadImage:(NSString *)aUrl sizeTo:(CGSize)size cached:(BOOL)cached paused:(BOOL)_paused {
 	DKDeferred *d;
-	if (cached)
-		d = [[[DKDeferredCache sharedCache] valueForKey:aUrl]
-				 addBoth:curryTS((id)self, @selector(_uncachedURLLoadCallback:results:), aUrl)];
-	else
-		d = [self loadURL:aUrl];
+	if (cached) {
+		d = [[DKDeferredCache sharedCache] valueForKey:aUrl];
+		if (_paused)
+			[d pause];
+		[d addBoth:curryTS((id)self, @selector(_uncachedURLLoadCallback:results:), aUrl)];
+	} else {
+		d = [self loadURL:aUrl paused:_paused];
+	}
 	[[d addBoth:curryTS((id)self, @selector(_loadImageCallback:results:), aUrl)]
 	 addBoth:curryTS((id)self, @selector(_resizeImageCallbackSize:url:cache:results:), 
 									 array_(nsnf(size.width), nsnf(size.height)), aUrl, nsnb(cached))];
 	return d;
+}
+
++ (id)loadImage:(NSString *)aUrl cached:(BOOL)cached {
+	return [self loadImage:aUrl cached:cached paused:NO];
+}
+
++ (id)loadImage:(NSString *)aUrl sizeTo:(CGSize)size cached:(BOOL)cached {
+	return [self loadImage:aUrl sizeTo:size cached:cached paused:NO];
 }
 
 + (id)_loadImageCallback:(NSString *)url results:(id)_results {

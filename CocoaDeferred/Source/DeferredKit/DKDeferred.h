@@ -83,6 +83,7 @@
 	BOOL chained;
 	BOOL finalized;
 	id<DKCallback> finalizer;
+	DKDeferred *resumeDeferred;
 }
 
 @property(readonly) int fired;
@@ -106,13 +107,17 @@
 + (id)callLater:(NSTimeInterval)seconds func:(id<DKCallback>)func;
 + (id)deferInThread:(id<DKCallback>)func withObject:(id)arg;
 + (id)loadURL:(NSString *)aUrl;
++ (id)loadURL:(NSString *)aUrl paused:(BOOL)_paused;
 + (id)loadURL:(NSString *)aUrl cached:(BOOL)cached;
++ (id)loadURL:(NSString *)aUrl cached:(BOOL)cached paused:(BOOL)_paused;
 // callback methods
 - (id)addBoth:(id<DKCallback>)fn;
 - (id)addCallback:(id<DKCallback>)fn;
 - (id)addErrback:(id<DKCallback>)fn;
 - (id)addCallbacks:(id<DKCallback>)cb :(id<DKCallback>)eb;
 // control methods
+- (id)pause;
+- (void)resume;
 - (void)cancel;
 - (void)callback:(id)result;
 - (void)errback:(id)result;
@@ -215,6 +220,8 @@
 - (id)_cbStartLoading:(id)result;
 - (void)setProgressCallback:(id<DKCallback>)callback withFrequency:(NSTimeInterval)frequency;
 - (void)_cbProgressUpdate;
+// tracks how many DKDeferredURLConnections are currently active
++ (int)requestCount;
 
 @end
 

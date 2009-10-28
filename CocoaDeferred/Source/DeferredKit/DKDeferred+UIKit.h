@@ -14,5 +14,8 @@
 
 + (id)loadImage:(NSString *)aUrl cached:(BOOL)cached;
 + (id)loadImage:(NSString *)aUrl sizeTo:(CGSize)size cached:(BOOL)cached;
++ (id)loadImage:(NSString *)aUrl cached:(BOOL)cached paused:(BOOL)_paused;
++ (id)loadImage:(NSString *)aUrl sizeTo:(CGSize)size cached:(BOOL)cached paused:(BOOL)_paused;
+
 
 @end

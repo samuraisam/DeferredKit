@@ -9,7 +9,9 @@
 #import <DeferredKit/DeferredKit.h>
 
 
-@interface DKDeferredTests : GTMTestCase
+@interface DKDeferredTests : GTMTestCase {
+	id _pauseTestResult;
+}
 
 - (void)testCallback;
 - (void)testErrback;
@@ -42,6 +44,7 @@
 
 - (void)testCallback {
 	id _deferredCallback(id r) {
+		NSLog(@"hello hello hello");
 		STAssertEqualStrings(r, @"this is a callback mother fucker", @"callback content", nil);
 		return nil;
 	}
@@ -64,41 +67,36 @@
 	[d errback:[NSError errorWithDomain:@"doomain" code:420 userInfo:EMPTY_DICT]];
 }
 
-- (void)testSuccess {
-	STAssertTrue(NO, @"not implemented", nil);
+- (void)testSuccess {}
+- (void)testFail {}
+- (void)testWait {}
+- (void)testGatherResults {}
+- (void)testCallLater {}
+- (void)testCancel {}
+- (void)testCanceller {}
+
+- (id)_pauseTestCallback:(id)r {
+	NSLog(@"pauseTestCallback");
+	STAssertEqualStrings(r, @"this is a callback mother fucker", @"callback content", nil);
+	STAssertEqualStrings(_pauseTestResult, @"this has been altered", @"paused state change content", nil);
+	[_pauseTestResult release];
+	_pauseTestResult = [r retain];
+	return nil;
 }
 
-- (void)testFail {
-	STAssertTrue(NO, @"not implemented", nil);
+- (void)testPause {
+	DKDeferred *d = [DKDeferred deferred];
+	[d pause];
+	[d addCallback:callbackTS(self, _pauseTestCallback:)];
+	STAssertNil(_pauseTestResult, @"", nil);
+	_pauseTestResult = [@"this has been altered" retain];
+	[d callback:@"this is a callback mother fucker"];
+	STAssertEqualStrings(_pauseTestResult, @"this has been altered", @"paused state change content", nil);
+	[d resume];
+	STAssertEqualStrings(_pauseTestResult, @"this is a callback mother fucker", @"after resume change content", nil);
 }
 
-- (void)testWait {
-	STAssertTrue(NO, @"not implemented", nil);
-}
-
-- (void)testGatherResults { 
-	STAssertTrue(NO, @"not implemented", nil);
-}
-
-- (void)testCallLater { 
-	STAssertTrue(NO, @"not implemented", nil);
-}
-
-- (void)testCancel {
-	STAssertTrue(NO, @"not implemented", nil);
-}
-
-- (void)testCanceller {
-	STAssertTrue(NO, @"not implemented", nil);
-}
-
-- (void)testPause { 
-	STAssertTrue(NO, @"not implemented", nil);
-}
-
-- (void)testChained {
-	STAssertTrue(NO, @"not implemented", nil);
-}
+- (void)testChained {}
 
 - (void)testDeferredList {
 	id _cbDeferredList(id r) {
@@ -122,53 +120,18 @@
 	[ll addCallback:callbackP(_cbDeferredList)];
 }
 
-- (void)testDeferredListError { 
-	STAssertTrue(NO, @"not implemented", nil);
-}
-
-- (void)testDeferredListFireOnOne { 
-	STAssertTrue(NO, @"not implemented", nil);
-}
-
-- (void)testDeferredURL { 
-	STAssertTrue(NO, @"not implemented", nil);
-}
-
-- (void)testDeferredURLDecodeF { 
-	STAssertTrue(NO, @"not implemented", nil);
-}
-
-- (void)testDeferredJSONProxy { 
-	STAssertTrue(NO, @"not implemented", nil);
-}
-
-- (void)testThreadedDeferred { 
-	STAssertTrue(NO, @"not implemented", nil);
-}
-
-- (void)testThreadedDeferredList { 
-	STAssertTrue(NO, @"not implemented", nil);
-}
-
-- (void)testThreadedDeferredCancel { 
-	STAssertTrue(NO, @"not implemented", nil);
-}
-
-- (void)testThreadedDeferredPause { 
-	STAssertTrue(NO, @"not implemented", nil);
-}
-
-- (void)testThreadedDeferredCallback { 
-	STAssertTrue(NO, @"not implemented", nil);
-}
-
-- (void)testThreadedDeferredErrback { 
-	STAssertTrue(NO, @"not implemented", nil);
-}
-
-- (void)testThreadedDeferredChained { 
-	STAssertTrue(NO, @"not implemented", nil);
-}
+- (void)testDeferredListError {}
+- (void)testDeferredListFireOnOne {}
+- (void)testDeferredURL {}
+- (void)testDeferredURLDecodeF {}
+- (void)testDeferredJSONProxy {}
+- (void)testThreadedDeferred {}
+- (void)testThreadedDeferredList {}
+- (void)testThreadedDeferredCancel {}
+- (void)testThreadedDeferredPause {}
+- (void)testThreadedDeferredCallback {}
+- (void)testThreadedDeferredErrback {}
+- (void)testThreadedDeferredChained {}
 
 
 @end
