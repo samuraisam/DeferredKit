@@ -47,8 +47,7 @@
   * 
   * It's design is greatly adopted from Twisted's Deferred class
   * and the library inspired by MochiKit's implementation of Deferred.
-//  * Usage of this library requires DKDeferred be built with [FunctionalKit][0]
-//  * and [json-framework][1].
+  * Usage of this library requires DKDeferred be built with [json-framework][1].
   * 
   * == Primary Use ==
   * 
@@ -157,6 +156,34 @@
 - (id)_cbDeferred:(id)index succeeded:(id)succeeded result:(id)result;
 
 @end
+
+
+/**
+ * = DKWaitForDeferred =
+ * 
+ * This class essentially pauses your method until `d` returns
+ * a result. It utilizes NSRunLoop and should not be used in 
+ * any kind of process intensive loops (since it's poll interval
+ * is only 1/100th of a second). It should normally allow for 
+ * timers and events to continue being processed in the same thread.
+ *
+ * It's not normally recommended to use this method but functions as a 
+ * great way to prototype.
+ */
+@interface DKWaitForDeferred : NSObject
+{
+	DKDeferred *d;
+	id result;
+	BOOL running;
+}
+
+@property (nonatomic, readwrite, retain) DKDeferred *d;
+@property (nonatomic, readwrite, retain) id result;
+
+- (id)initWithDeferred:(DKDeferred *)deferred;
+
+@end
+
 
 /**
   * = DKThreadedDeferred = 

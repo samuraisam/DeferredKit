@@ -315,8 +315,8 @@ id _gatherResultsCallback(id results) {
 	if (finalized)
 		@throw __FINALIZED_DEFERRED_REUSE_ERROR;
 	[chain addObject:array_(
-		(cb == nil) ? [NSNull null] : cb,
-		(eb == nil) ? [NSNull null] : eb)];
+		(cb == nil) ? [NSNull null] : (id)cb,
+		(eb == nil) ? [NSNull null] : (id)eb)];
 	if (fired >= 0)
 		[self _fire];
 	return self;
@@ -466,6 +466,43 @@ id _gatherResultsCallback(id results) {
 @end
 
 
+@implementation DKWaitForDeferred
+
+@synthesize result, d;
+
+- (id)initWithDeferred:(DKDeferred *)deferred {
+	if (self = [super init]) {
+		d = [deferred retain];
+	}
+	return self;
+}
+
+- (id)result {
+	[d addCallback:callbackTS(self, _get:)];
+	running = YES;
+	while (running) {
+		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.01]];
+	}
+	return result;
+}
+
+- (id)_get:(id)_result {
+	if (isDeferred(_result))
+		return [_result addCallback:callbackTS(self, _get:)];
+	running = NO;
+	self.result = _result;
+	return _result;
+}
+
+- (void)dealloc {
+	[d release];
+	[result release];
+	[super dealloc];
+}
+
+@end
+
+
 @implementation DKThreadedDeferred
 
 @synthesize thread, parentThread, action;
@@ -532,6 +569,7 @@ id _gatherResultsCallback(id results) {
 
 @end
 
+
 @implementation DKDeferredURLConnection
 
 static NSInteger __urlConnectionCount;
@@ -540,7 +578,7 @@ static NSInteger __urlConnectionCount;
 @synthesize expectedContentLength, percentComplete;
 
 + (id)deferredURLConnection:(NSString *)aUrl {
-	return [[DKDeferredURLConnection alloc] initWithURL:aUrl];
+	return [(DKDeferredURLConnection *)[DKDeferredURLConnection alloc] initWithURL:aUrl];
 }
 
 - (id)initWithURL:(NSString *)aUrl {

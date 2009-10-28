@@ -147,7 +147,7 @@ Since the disk cache utilizes a deferred object interface, access to cached resu
 
 #### Class Methods
 ### `+[DKDeferred deferred]`
-  > Returns an empty `DKDeferred`
+  >  Returns an empty `DKDeferred`
 ### `+[DKDeferred maybeDeferred:(id<DKCallback>)maybeDeferred]`
   > 
 ### `+[DKDeferred gatherResuls:(NSArray *)listOfDeferreds]`

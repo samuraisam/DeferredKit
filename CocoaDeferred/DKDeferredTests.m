@@ -22,6 +22,8 @@
 - (void)testCancel;
 - (void)testCanceller;
 - (void)testPause;
+- (void)testInline;
+- (void)testInlineError;
 - (void)testChained;
 - (void)testDeferredList;
 - (void)testDeferredListError;
@@ -94,6 +96,21 @@
 	STAssertEqualStrings(_pauseTestResult, @"this has been altered", @"paused state change content", nil);
 	[d resume];
 	STAssertEqualStrings(_pauseTestResult, @"this is a callback mother chicken pluckerer", @"after resume change content", nil);
+}
+
+- (void)testInline {
+	id _printSomething(id r) {
+		STAssertEqualStrings(r, @"omgwtf", @"callback", nil);
+		r = [NSString stringWithFormat:@"something:%@", r];
+		return r;
+	}
+	DKDeferred *d = [DKDeferred wait:5.0f value:@"omgwtf"];
+	[d addCallback:callbackP(_printSomething)];
+	id r = waitForDeferred(d);
+	STAssertEqualStrings(r, @"something:omgwtf", @"after inline callback", nil);
+}
+
+- (void)testInlineError {
 }
 
 - (void)testChained {}
