@@ -508,7 +508,7 @@ id _gatherResultsCallback(id results) {
 @synthesize thread, parentThread, action;
 
 + (DKThreadedDeferred *)threadedDeferred:(id<DKCallback>)func {
-	return [[self alloc] initWithFunction:func withObject:nil];
+	return [[[self alloc] initWithFunction:func withObject:nil] autorelease];
 }
 
 - (id)initWithFunction:(id<DKCallback>)func
@@ -578,7 +578,7 @@ static NSInteger __urlConnectionCount;
 @synthesize expectedContentLength, percentComplete;
 
 + (id)deferredURLConnection:(NSString *)aUrl {
-	return [(DKDeferredURLConnection *)[DKDeferredURLConnection alloc] initWithURL:aUrl];
+	return [[(DKDeferredURLConnection *)[DKDeferredURLConnection alloc] initWithURL:aUrl] autorelease];
 }
 
 - (id)initWithURL:(NSString *)aUrl {
