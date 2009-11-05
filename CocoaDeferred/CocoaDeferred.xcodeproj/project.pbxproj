@@ -58,8 +58,6 @@
 
 /* Begin PBXFileReference section */
 		229C374C104C756800CFAA3F /* DeferredKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeferredKit.h; path = Source/DeferredKit/DeferredKit.h; sourceTree = "<group>"; };
-		229C374D104C756800CFAA3F /* DKDeferredTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DKDeferredTests.m; path = Source/DeferredKit/DKDeferredTests.m; sourceTree = SOURCE_ROOT; };
-		229C374E104C756800CFAA3F /* DKDeferredTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKDeferredTests.h; path = Source/DeferredKit/DKDeferredTests.h; sourceTree = SOURCE_ROOT; };
 		229C374F104C756800CFAA3F /* DKDeferred+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "DKDeferred+JSON.m"; path = "Source/DeferredKit/DKDeferred+JSON.m"; sourceTree = SOURCE_ROOT; };
 		229C3750104C756800CFAA3F /* DKDeferred+UIKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "DKDeferred+UIKit.m"; path = "Source/DeferredKit/DKDeferred+UIKit.m"; sourceTree = SOURCE_ROOT; };
 		229C3751104C756800CFAA3F /* DKDeferred+UIKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "DKDeferred+UIKit.h"; path = "Source/DeferredKit/DKDeferred+UIKit.h"; sourceTree = SOURCE_ROOT; };
@@ -165,10 +163,8 @@
 				229C38AB104DE34D00CFAA3F /* Tests */,
 				229C3809104DDE4600CFAA3F /* JSON */,
 				229C374C104C756800CFAA3F /* DeferredKit.h */,
-				229C374D104C756800CFAA3F /* DKDeferredTests.m */,
 				229C3771104C76D400CFAA3F /* UIImage+DKDeferred.m */,
 				229C3772104C76D400CFAA3F /* UIImage+DKDeferred.h */,
-				229C374E104C756800CFAA3F /* DKDeferredTests.h */,
 				229C374F104C756800CFAA3F /* DKDeferred+JSON.m */,
 				229C3750104C756800CFAA3F /* DKDeferred+UIKit.m */,
 				229C3751104C756800CFAA3F /* DKDeferred+UIKit.h */,
