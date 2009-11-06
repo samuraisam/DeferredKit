@@ -25,7 +25,6 @@ id _decodeJSON(id results) {
 	return nil;
 }
 
-// TODO: this sometimes fails when _decodeJSON returns nil
 id _decodeJSONResonse(id results) {
 	if (results && ! (results == [NSNull null]) && 
 			[results isKindOfClass:[NSDictionary class]]) {
@@ -44,16 +43,20 @@ id _decodeJSONResonse(id results) {
 @implementation DKDeferred (JSONAdditions)
 
 + (id)loadJSONDoc:(NSString *)aUrl {
-	return [[DKDeferredURLConnection alloc] 
+	return [[[DKDeferredURLConnection alloc] 
 					initWithRequest:[NSURLRequest 
 													 requestWithURL:[NSURL URLWithString:aUrl]]
 					pauseFor:0.0f
-					decodeFunction:callbackP(_decodeJSON)];
+          decodeFunction:callbackP(_decodeJSON)] autorelease];
 }
 
 + (id)jsonService:(NSString *)aUrl name:(NSString *)serviceName {
-	return [[DKJSONServiceProxy alloc] 
-					initWithURL:aUrl serviceName:serviceName];
+	return [[[DKJSONServiceProxy alloc] 
+          initWithURL:aUrl serviceName:serviceName] autorelease];
+}
+
++ (id)jsonService:(NSString *)aUrl {
+  return [self jsonService:aUrl name:@""];
 }
 
 @end
@@ -70,6 +73,12 @@ id _decodeJSONResonse(id results) {
 		serviceName = [aService retain];
 	}
 	return self;
+}
+
+- (void)dealloc {
+  [serviceURL release];
+  [serviceName release];
+  [super dealloc];
 }
 
 - (NSString *)description {
@@ -93,6 +102,8 @@ id _decodeJSONResonse(id results) {
 }
 
 - (id)callWithName:(NSString *)name args:(NSArray *)args {
+  if (serviceName)
+    [serviceName release];
 	serviceName = [name retain];
 	return [self :args];
 }
