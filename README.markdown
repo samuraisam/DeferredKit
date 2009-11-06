@@ -2,11 +2,14 @@
 
 DeferredKit is an asynchronous library for cocoa built around the idea of a [Deferred Object](http://twistedmatrix.com/projects/core/documentation/howto/defer.html) - that is, "an object created to encapsulate a sequence of callbacks in response to an object that may not yet be available." Besides the core class, DKDeferred, much other functionality is included in this project, including an asynchronous URL loading API, an asynchronous disk cache, and a JSON-RPC implementation.
 
-DeferredKit is modeled after the deferred class by  [TwistedMatrix](http://twistedmatrix.com/) and inspired by [MochiKit's](http://www.mochikit.com/doc/html/MochiKit/Async.html#fn-deferred) implementation of Deferred.
+DeferredKit is modeled after the deferred class by  [TwistedMatrix](http://twistedmatrix.com/) and inspired by [MochiKit's](http://www.mochikit.com/doc/html/MochiKit/Async.html#fn-deferred) implementation of Deferred. DKCallback - the function object is mostly taken from a pre-blocks version of [FunctionalKit](http://github.com/mogeneration/functionalkit).
 
 The DKDeferred implementation is not dependent upon threads or any other form of concurrency for it's operation (however, you may create threaded Deferred's) and operates in the same environment as the rest of your Objective-C program.
 
 **NOTE:** DeferredKit bundles [json-framework](http://code.google.com/p/json-framework/), and will need to be removed from your project before adding DeferredKit using the following method. Otherwise, embedding the code works just as well.
+
+More:
+  1. [JSON-RPC in Objective-C](http://samuraiblog.com/wordpress/2009/11/06/json-rpc-in-objective-c/)
 
 ## Installing DeferredKit
 1. Copy the entire source tree into your projects directory.
