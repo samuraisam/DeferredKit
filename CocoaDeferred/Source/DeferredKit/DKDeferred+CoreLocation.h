@@ -27,10 +27,10 @@
 
 @interface DKDeferredLocation : DKDeferred <CLLocationManagerDelegate>
 {
-	CLLocation *location;
-	CLLocationManager *_manager;
-	BOOL onlyOne;
-	int updates;
+  CLLocation *location;
+  CLLocationManager *_manager;
+  BOOL onlyOne;
+  int updates;
 }
 
 @property(readonly) CLLocation *location;
