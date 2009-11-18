@@ -70,7 +70,7 @@
   *     // tell the user the internet is down.
   *     return nil;
   * }
-  *  </pre>   
+  * </pre>   
   */
 
 @interface DKDeferred : NSObject {
