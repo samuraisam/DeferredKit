@@ -16,7 +16,7 @@
 	if (cached) {
 		d = [[DKDeferredCache sharedCache] valueForKey:aUrl];
 		if (_paused)
-			[d pause];
+			d = pauseDeferred(d);
 		[d addBoth:curryTS((id)self, @selector(_cachedLoadURLCallback:results:), aUrl)];
 	} else {
 		d = [self loadURL:aUrl paused:_paused];
@@ -30,7 +30,7 @@
 	if (cached) {
 		d = [[DKDeferredCache sharedCache] valueForKey:aUrl];
 		if (_paused)
-			[d pause];
+			d = pauseDeferred(d);
 		[d addBoth:curryTS((id)self, @selector(_uncachedURLLoadCallback:results:), aUrl)];
 	} else {
 		d = [self loadURL:aUrl paused:_paused];

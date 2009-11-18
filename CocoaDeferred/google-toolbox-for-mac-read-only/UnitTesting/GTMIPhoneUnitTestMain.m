@@ -15,19 +15,57 @@
 //  License for the specific language governing permissions and limitations under
 //  the License.
 //
+//
+//#import "GTMDefines.h"
+//#if !GTM_IPHONE_SDK
+//  #error GTMIPhoneUnitTestMain for iPhone only
+//#endif
+//#import <UIKit/UIKit.h>
+//
+//// Creates an application that runs all tests from classes extending
+//// SenTestCase, outputs results and test run time, and terminates right
+//// afterwards.
+//int main(int argc, char *argv[]) {
+//  NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+//  int retVal = UIApplicationMain(argc, argv, nil, @"GTMIPhoneUnitTestDelegate");
+//  [pool release];
+//  return retVal;
+//}
 
-#import "GTMDefines.h"
-#if !GTM_IPHONE_SDK
-  #error GTMIPhoneUnitTestMain for iPhone only
-#endif
+//
+//  main.m
+//  __APP_NAME__
+//
+//  Created by Ben Chatelain on 11/24/2008.
+//
+
 #import <UIKit/UIKit.h>
 
-// Creates an application that runs all tests from classes extending
-// SenTestCase, outputs results and test run time, and terminates right
-// afterwards.
-int main(int argc, char *argv[]) {
-  NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-  int retVal = UIApplicationMain(argc, argv, nil, @"GTMIPhoneUnitTestDelegate");
-  [pool release];
-  return retVal;
+#ifdef DEBUG //TARGET_IPHONE_SIMULATOR
+// #import <Foundation/NSDebug.h>
+#import "NSDebug.h"
+#import "GTMStackTrace.h"
+
+void exceptionHandler(NSException *exception) {
+	NSLog(@"%@", GTMStackTraceFromException(exception));
 }
+#endif
+
+int main(int argc, char *argv[]) {
+	
+#ifdef DEBUG //TARGET_IPHONE_SIMULATOR
+	NSLog(@"Debug enabled");	
+	NSDebugEnabled = YES;
+	NSZombieEnabled = YES;
+	NSDeallocateZombies = NO;
+	NSHangOnUncaughtException = YES;
+	[NSAutoreleasePool enableFreedObjectCheck:YES];
+	NSSetUncaughtExceptionHandler(&exceptionHandler);
+#endif
+	
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	int retVal = UIApplicationMain(argc, argv, nil, @"GTMIPhoneUnitTestDelegate");
+	[pool release];
+	return retVal;
+}
+

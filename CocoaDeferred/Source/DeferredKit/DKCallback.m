@@ -167,7 +167,7 @@
 }
 
 + (DKCallback *)fromInvocation:(NSInvocation *)invocation parameterIndex:(NSUInteger)index {
-	return [[DKCallbackFromInvocation alloc] initWithInvocation:invocation parameterIndex:index];	
+	return [[[DKCallbackFromInvocation alloc] initWithInvocation:invocation parameterIndex:index] autorelease];	
 }
 
 - (id):(id)arg {

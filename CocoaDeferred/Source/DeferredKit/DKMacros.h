@@ -48,7 +48,8 @@ static inline id<DKCallback> _curryTS(id target, SEL selector, ...) {
 
 #define curryTS(__target, __selector, args...) _curryTS(__target, __selector, args, nil)
 #define isDeferred(__obj) [__obj isKindOfClass:[DKDeferred class]]
-#define waitForDeferred(__d) [[[[DKWaitForDeferred alloc] initWithDeferred:__d] autorelease] result]
+#define waitForDeferred(__d) [[[[[[DKWaitForDeferred alloc] initWithDeferred:__d] autorelease] result] retain] autorelease]
+#define pauseDeferred(__d) [[[DKDeferredWrapper alloc] initWithDeferred:__d] autorelease]
 #define nsni(__i) [NSNumber numberWithInt:__i]
 #define nsnd(__d) [NSNumber numberWithDouble:__d]
 #define nsnf(__f) [NSNumber numberWithFloat:__f]

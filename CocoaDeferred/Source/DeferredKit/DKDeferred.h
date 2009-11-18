@@ -15,6 +15,7 @@
 #define DKDeferredCanceledError 419
 #define DKDeferredGenericError 420
 #define DKDeferredURLError 421
+#define DKDeferredPoolTimeout 422
 #define DKDeferredDeferredKey @"deferred"
 #define DKDeferredResultKey @"result"
 #define DKDeferredExceptionKey @"exception"
@@ -71,6 +72,7 @@
   * }
   *     
   */
+
 @interface DKDeferred : NSObject {
 	NSMutableArray *chain;
 	NSString *deferredID;
@@ -82,7 +84,7 @@
 	BOOL chained;
 	BOOL finalized;
 	id<DKCallback> finalizer;
-	DKDeferred *resumeDeferred;
+	NSDate *started;
 }
 
 @property(readonly) int fired;
@@ -93,6 +95,7 @@
 @property(readonly) id<DKCallback> canceller;
 @property(readonly) NSString *deferredID;
 @property(readwrite, retain) id<DKCallback> finalizer;
+@property(readwrite, retain) NSDate *started;
 
 // initializers
 + (DKDeferred *)deferred;
@@ -105,6 +108,7 @@
 + (id)wait:(NSTimeInterval)seconds value:(id)value;
 + (id)callLater:(NSTimeInterval)seconds func:(id<DKCallback>)func;
 + (id)deferInThread:(id<DKCallback>)func withObject:(id)arg;
++ (id)defer:(id<DKCallback>)func withObject:(id)arg inQueue:(NSOperationQueue *)queue;
 + (id)loadURL:(NSString *)aUrl;
 + (id)loadURL:(NSString *)aUrl paused:(BOOL)_paused;
 + (id)loadURL:(NSString *)aUrl cached:(BOOL)cached;
@@ -120,6 +124,9 @@
 - (void)cancel;
 - (void)callback:(id)result;
 - (void)errback:(id)result;
+// comparison
+- (NSComparisonResult)compare:(DKDeferred *)otherDeferred;
+- (NSComparisonResult)compareDates:(DKDeferred *)otherDeferred;
 
 @end
 
@@ -159,9 +166,25 @@
 
 
 /**
+ * = DKDeferredWrapper =
+ *
+ * Used internally to pause plain deferreds upon initialization. Resume
+ * the contained deferred with [obj callback:nil];
+ */
+@interface DKDeferredWrapper : DKDeferred {
+	DKDeferred *d;
+}
+
+- (id)initWithDeferred:(DKDeferred *)deferredToPause;
+- (id)_cbStart:(id)result;
+
+@end
+
+
+/**
  * = DKWaitForDeferred =
  * 
- * This class essentially pauses your method until `d` returns
+ * This class essentially pauses the current thread until `d` returns
  * a result. It utilizes NSRunLoop and should not be used in 
  * any kind of process intensive loops (since it's poll interval
  * is only 1/100th of a second). It should normally allow for 
@@ -186,10 +209,12 @@
 
 
 /**
-  * = DKThreadedDeferred = 
-  * 
-  * Wraps a threaded method call in a deferred interface.
-  */
+ * = DKThreadedDeferred = 
+ * 
+ * Wraps the execution of a DKCallback in it's own thread and 
+ * callbacks with the function's return value. Can be paused
+ * in which case [d callback:nil] will start the thread.
+ */
 @interface DKThreadedDeferred : DKDeferred
 {
 	NSThread *thread;
@@ -203,18 +228,59 @@
 
 // initializers
 + (DKThreadedDeferred *)threadedDeferred:(id<DKCallback>)func;
++ (DKThreadedDeferred *)threadedDeferred:(id<DKCallback>)func paused:(BOOL)startPaused;
 - (id)initWithFunction:(id<DKCallback>)func withObject:(id)arg;
-- (id)initWithFunction:(id<DKCallback>)func withObject:(id)arg canceller:(id<DKCallback>)cancelf;
+- (id)initWithFunction:(id<DKCallback>)func 
+						withObject:(id)arg 
+						 canceller:(id<DKCallback>)cancelf
+								paused:(BOOL)startPaused;
 // internal methods used to run the function
 - (void)_cbThreadedDeferred:(id)arg;
 - (void)_cbReturnFromThread:(id)result;
 
 @end
 
+
+/**
+ * = DKDeferredOperation =
+ * 
+ * Wraps the execution of a DKCallback in an NSOperation and callbacks
+ * with the function's return value. Operations are not started upon
+ * creation of this object. You must add [d operation] to an
+ * NSOperationQueue or call [[d operation] start].
+ */
+ 
+@interface DKDeferredOperation : DKDeferred
+{
+	NSOperation *op;
+	NSThread *parentThread;
+	id<DKCallback> action;
+	id arg;
+	BOOL _paused;
+}
+
+@property(readonly) NSOperation *operation;
+
++ (DKDeferredOperation *)operation:(id<DKCallback>)func withObject:(id)arg;
++ (DKDeferredOperation *)pausedOperation:(id<DKCallback>)func withObject:(id)arg;
+- (id)initWithFunction:(id<DKCallback>)func 
+						withObject:(id)arg
+						 canceller:(id<DKCallback>)cancelf
+								paused:(BOOL)startPaused;
+- (id)_cbStartOperation:(id)arg;
+- (void)_cbOperation:(id)_arg;
+- (void)_cbReturnFromOp:(id)result;
+
+@end
+
+
 /**
  * = DKDeferredURLConnection =
  *
- * Wraps URL requests in a simplified deferred interface.
+ * Wraps URL requests in a simplified deferred interface. Callbacks
+ * with the NSData value of the entire URL when done downloading. Can
+ * be started paused in which case [d callback:nill] will start the
+ * connection.
  */
 @interface DKDeferredURLConnection : DKDeferred 
 {
@@ -238,11 +304,16 @@
 
 // initializers
 + (id)deferredURLConnection:(NSString *)aUrl;
++ (id)pausedDeferredURLConnection:(NSString *)aUrl;
 - (id)initWithURL:(NSString *)aUrl;
+- (id)initWithURL:(NSString *)aUrl paused:(BOOL)_paused;
 - (id)initWithURL:(NSString *)aUrl pauseFor:(NSTimeInterval)pause;
 - (id)initWithRequest:(NSURLRequest *)req 
 						 pauseFor:(NSTimeInterval)pause
 			 decodeFunction:(id<DKCallback>)decodeF;
+- (id)initRequest:(NSURLRequest *)req 
+	 decodeFunction:(id<DKCallback>)decodeF
+					 paused:(BOOL)_paused;
 // internal callbacks
 - (id)_cbStartLoading:(id)result;
 - (void)setProgressCallback:(id<DKCallback>)callback withFrequency:(NSTimeInterval)frequency;
@@ -288,6 +359,7 @@
 	int cullFrequency;
 	NSString *dir;
 	NSTimeInterval *defaultTimeout;
+	NSOperationQueue *operationQueue;
 }
 
 + (id)sharedCache;
@@ -305,8 +377,105 @@
 
 @end
 
+
 @interface NSObject(DKDeferredCache)
 
 + (BOOL)canBeStoredInCache;
+
+@end
+
+
+/**
+ * = DKKeyedPool =
+ *
+ * Manages a group of deferreds unique by key. A pool may be initialized
+ * as either paused or not. A paused pool will automatically resume paused
+ * deferreds as you add them. A pool can pause and resume all it's deferreds
+ * and upon releaseing cancels all managed deferreds.
+ */
+@protocol DKKeyedPool <NSObject>
+
+/* Adds a deferred to the pool. Adding a deferred with
+ * an existing key will silently cancel the added deferred,
+ * killing all callbacks added to it. Deferreds must be chained with
+ * the actual deferred to execute after being added to the active pool,
+ * meaning ``d`` is waiting on [d callback:nil] to resume it.
+ */
+- (id)add:(DKDeferred *)d key:(id)k;
+/* Cancels all waiting and active deferreds. */
+- (void)drain;
+@optional
+- (int)running;
+- (void)setConcurrency:(int)numConcurrentDeferreds;
+- (int)concurrency;
+- (void)setTimeout:(double)concurrentDeferredTimeout;
+- (double)timeout;
+
+@end
+
+
+/**
+ * = MappedPriorityQueue =
+ *
+ * A priority queue that stores it's values in a mapping. An attempt
+ * to insert an object for which it's key already exists should be ignored.
+ */
+@protocol MappedPriorityQueue <NSObject>
+
+// returns obj or nil on duplicate key
+- (id)enqueue:(id)obj key:(id)key;
+- (id)enqueue:(id)obj key:(id)key prioritySelector:(SEL)prioritySelector;
+// returns [obj, key]
+- (id)dequeue;
+- (id)peek;
+- (int)count;
+- (NSArray *)allValues;
+- (NSArray *)allKeys;
+
+@end
+
+
+/**
+ * = DKMappedPriorityQueue =
+ * 
+ * A mapped priority queue implementation. Uses the algorithm used
+ * in the python module heapq.py implementation to minimize compares
+ * on objects.
+ */
+@interface DKMappedPriorityQueue : NSObject <MappedPriorityQueue>
+{
+	NSMutableDictionary *_queueKeys; // {k => [sel, obj]}
+	NSMutableArray *_queue; // [k, k...]
+}
+
+- (void)_siftUp:(int)pos;
+- (void)_siftDown:(int)startPos :(int)pos;
+- (NSComparisonResult)compareKeys:(id)leftKey :(id)rightKey;
+- (id)objForKey:(id)key;
+- (SEL)selForKey:(id)key;
+
+@end
+
+
+/**
+ * = DKDeferredPool =
+ * 
+ * A Keyed Pool implementation. Doesn't yet support timeouts.
+ */
+@interface DKDeferredPool : NSObject <DKKeyedPool>
+{
+	id<MappedPriorityQueue> _queue;
+	NSMutableDictionary *_runningDeferreds;
+	int concurrency;
+	double timeout;
+	id<DKCallback> finalizeFunc;
+	NSLock *wLock;
+}
+
++ (id)pool;
+- (id)_cbRemoveDeferred:(id)key :(id)results;
+- (void)_resumeWaiting;
+- (void)_checkFinalization;
+- (void)setFinalizeFunc:(id<DKCallback>)f;
 
 @end

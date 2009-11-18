@@ -8,9 +8,6 @@
 #import "DKDeferred.h"
 #import <CommonCrypto/CommonDigest.h>
 
-// TODO: this doesn't really work?
-#define CATCH_EXCEPTIONS 0
-
 
 NSString* md5(NSString *str) {
 	const char *cStr = [str UTF8String];
@@ -30,6 +27,14 @@ id _gatherResultsCallback(id results) {
 	return ret;
 }
 
+
+@implementation NSObject(DKDeferredCache)
+
++ (BOOL)canBeStoredInCache { return [self conformsToProtocol:@protocol(NSCoding)]; }
+
+@end
+
+
 @interface DKDeferred() // private methods
 - (void)_resback:(id)result;
 - (void)_check;
@@ -41,7 +46,7 @@ id _gatherResultsCallback(id results) {
 @implementation DKDeferred
 
 @synthesize fired, paused, results, silentlyCancelled;
-@synthesize deferredID, canceller; // RO
+@synthesize deferredID, canceller, started; // RO
 @synthesize chained, finalizer; //RW
 
 + (DKDeferred *)deferred {
@@ -89,7 +94,6 @@ id _gatherResultsCallback(id results) {
 
 + (id)maybeDeferred:(id<DKCallback>)maybeDeferredf withObject:(id)anObject {
 	id result;
-//	@try {		
 	id r = [maybeDeferredf :anObject];
 	if ([r isKindOfClass:[DKDeferred class]])
 		result = r;
@@ -97,19 +101,17 @@ id _gatherResultsCallback(id results) {
 		result = [self fail:r];
 	else
 		result = [self succeed:r];
-//	} @catch (NSException *e) {
-//		NSLog(@"Exception in maybeDeferred: %@", e);
-//		result = [self fail:[NSError 
-//												 errorWithDomain:DKDeferredErrorDomain
-//												 code:DKDeferredGenericError 
-//												 userInfo:dict_([NSNull null], DKDeferredDeferredKey,
-//																				 e, DKDeferredExceptionKey)]];
-//	}
 	return result;
 }
 
 + (id)deferInThread:(id<DKCallback>)func withObject:(id)arg {
 	return [[DKThreadedDeferred alloc] initWithFunction:func withObject:arg];
+}
+
++ (id)defer:(id<DKCallback>)func withObject:(id)arg inQueue:(NSOperationQueue *)queue {
+	id ret = [DKDeferredOperation operation:func withObject:arg];
+	[queue addOperation:[ret operation]];
+	return ret;
 }
 
 + (id)loadURL:(NSString *)aUrl cached:(BOOL)cached {
@@ -121,7 +123,7 @@ id _gatherResultsCallback(id results) {
 	if (cached) {
 		ret = [[DKDeferredCache sharedCache] valueForKey:aUrl];
 		if (_paused)
-			[ret pause];
+			ret = pauseDeferred(ret);
 		[ret addBoth:curryTS((id)self, @selector(_cachedLoadURLCallback:results:), aUrl)];
 	} else {
 		ret = [self loadURL:aUrl paused:_paused];
@@ -155,11 +157,23 @@ id _gatherResultsCallback(id results) {
 	return nil;
 }
 
++ (id)_cbStartConnection:(id)aUrl {
+	return [DKDeferredURLConnection deferredURLConnection:aUrl];
+}
+
 + (id)loadURL:(NSString *)aUrl paused:(BOOL)_paused { 
-	id ret = [DKDeferredURLConnection deferredURLConnection:aUrl];
-	if (_paused)
-		return [ret pause];
-	return ret;
+//	id ret;
+//	if (_paused) {
+//		ret = [DKDeferred deferred];
+//		[ret addBoth:callbackTS((id)self, _cbStartConnection:)];
+//		[ret pause];
+//		[ret callback:aUrl];
+//	} else {
+//	id ret = [DKDeferredURLConnection deferredURLConnection:aUrl];
+//	if (_paused)
+//		[ret pause];
+//	}
+	return [[[DKDeferredURLConnection alloc] initWithURL:aUrl paused:_paused] autorelease];
 }
 
 + (id)loadURL:(NSString *)aUrl {
@@ -184,6 +198,7 @@ id _gatherResultsCallback(id results) {
 		deferredID = [_uuid1() retain];
 		fired = -1;
 		paused = 0;
+		started = [[NSDate date] retain];
 		results = [[NSMutableArray arrayWithObjects:[NSNull null], [NSNull null], nil] retain];
 		silentlyCancelled = NO;
 		chained = NO;
@@ -199,7 +214,7 @@ id _gatherResultsCallback(id results) {
 	[results release];
 	[finalizer release];
 	[canceller release];
-	[resumeDeferred release];
+	[started release];
 	[super dealloc];
 }
 	
@@ -209,27 +224,14 @@ id _gatherResultsCallback(id results) {
 					deferredID, fired];
 }
 
-//- (id)_pauseCallback:(id)r {
-//	resumeDeferred = [[DKDeferred deferred] retain];
-//	[resumeDeferred addCallback:callbackTS(self, _continueChain:)];
-//	return resumeDeferred;
-//}
-//
-//- (id)_resumeDeferred:(id)r {
-//	return r;
-//}
-	
-//	resumeDeferred = [[DKDeferred deferred] retain];
-//	[resumeDeferred addCallback:callbackTS(self, _continueChain:)];
-//	
-
 - (id)pause {
 	paused += 1;
 	return self;
 }
 
 - (void)resume {
-	paused -= 1;
+	if (paused >= 0)
+		paused -= 1;
 	if (paused)
 		return;
 	if (fired >= 0)
@@ -261,8 +263,10 @@ id _gatherResultsCallback(id results) {
 	fired = ([result isKindOfClass:[NSError class]] ? 1 : 0);
 	[results replaceObjectAtIndex:fired withObject:
 	 (result == nil ? [NSNull null] : result)];
-	if (paused == 0)
+	if (paused == 0) {
+//		started = [[NSDate date] retain];
 		[self _fire];
+	}
 }
 
 - (void)_check {
@@ -341,14 +345,13 @@ id _gatherResultsCallback(id results) {
 - (void)_fire {
 	id<DKCallback> cb = nil;
 	int _fired = fired;
-	id result = [results objectAtIndex:_fired];
+	id result = [[[results objectAtIndex:_fired] retain] autorelease];
 	while ([chain count] > 0 && paused == 0) {
-		NSArray *pair = [[chain objectAtIndex:0] retain];
+		NSArray *pair = [[[chain objectAtIndex:0] retain] autorelease];
 		[chain removeObjectAtIndex:0];
-		id f = [[pair objectAtIndex:_fired] retain];
+		id f = [[[pair objectAtIndex:_fired] retain] autorelease];
 		if (f == [NSNull null])
 			continue;
-//		@try {
 		id newResult = [(id<DKCallback>)f :result];
 		result = (newResult == nil) ? [NSNull null] : newResult;
 		_fired = [result isKindOfClass:[NSError class]] ? 1 : 0;
@@ -356,18 +359,6 @@ id _gatherResultsCallback(id results) {
 			cb = callbackTS(self, _continueChain:);
 			paused += 1;
 		}
-//		} @catch (NSException *e) {
-//			NSLog(@"Exception in Deferred Chain: %@", e);
-//			_fired = 1;
-//			if (!CATCH_EXCEPTIONS)
-//				@throw e;
-//			result = [NSError 
-//								errorWithDomain:DKDeferredErrorDomain
-//								code:DKDeferredGenericError 
-//								userInfo:dict_(self, DKDeferredDeferredKey,
-//																e, DKDeferredExceptionKey)];
-//		}
-		[pair release];
 	}
 	fired = _fired;
 	[results replaceObjectAtIndex:fired withObject:result];
@@ -379,6 +370,14 @@ id _gatherResultsCallback(id results) {
 		[result addBoth:cb];
 		[result setChained:YES];
 	}
+}
+
+- (NSComparisonResult)compare:(DKDeferred *)otherDeferred {
+	return [self.deferredID compare:otherDeferred.deferredID];
+}
+
+- (NSComparisonResult)compareDates:(DKDeferred *)otherDeferred {
+	return [self.started compare:otherDeferred.started];
 }
 
 @end
@@ -472,23 +471,27 @@ id _gatherResultsCallback(id results) {
 
 - (id)initWithDeferred:(DKDeferred *)deferred {
 	if (self = [super init]) {
-		d = [deferred retain];
+		d = [[deferred addBoth:callbackTS(self, _get:)] retain];
 	}
 	return self;
 }
 
 - (id)result {
-	[d addCallback:callbackTS(self, _get:)];
-	running = YES;
+	if (!result) {
+		running = YES;
+	}
 	while (running) {
-		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.01]];
+		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
 	}
 	return result;
 }
 
 - (id)_get:(id)_result {
-	if (isDeferred(_result))
-		return [_result addCallback:callbackTS(self, _get:)];
+	if (isDeferred(_result)) {
+		[d release];
+		d = [[_result addBoth:callbackTS(self, _get:)] retain];
+		return d;
+	}
 	running = NO;
 	self.result = _result;
 	return _result;
@@ -503,6 +506,28 @@ id _gatherResultsCallback(id results) {
 @end
 
 
+@implementation DKDeferredWrapper
+
+- (id)initWithDeferred:(DKDeferred *)deferredToPause {
+	if ((self = [super initWithCanceller:nil])) {
+		d = [deferredToPause retain];
+		[self addCallback:callbackTS(self, _cbStart:)];
+	}
+	return self;
+}
+
+- (id)_cbStart:(id)result {
+	return [d autorelease];
+}
+
+- (void)dealloc {
+	[d release];
+	[super dealloc];
+}
+
+@end
+
+
 @implementation DKThreadedDeferred
 
 @synthesize thread, parentThread, action;
@@ -511,14 +536,19 @@ id _gatherResultsCallback(id results) {
 	return [[[self alloc] initWithFunction:func withObject:nil] autorelease];
 }
 
++ (DKThreadedDeferred *)threadedDeferred:(id<DKCallback>)func paused:(BOOL)_paused {
+	return [[[self alloc] initWithFunction:func withObject:nil canceller:nil paused:_paused] autorelease];
+}
+
 - (id)initWithFunction:(id<DKCallback>)func
 						withObject:(id)arg {
-	return [self initWithFunction:func withObject:arg canceller:nil];
+	return [self initWithFunction:func withObject:arg canceller:nil paused:NO];
 }
 
 - (id)initWithFunction:(id<DKCallback>)func 
 						withObject:(id)arg
-						 canceller:(id<DKCallback>)cancelf {
+						 canceller:(id<DKCallback>)cancelf
+								paused:(BOOL)_paused {
 	if ((self = [super initWithCanceller:cancelf])) {
 		action = [func retain];
 		thread = [[[NSThread alloc] 
@@ -526,8 +556,17 @@ id _gatherResultsCallback(id results) {
 							 selector:@selector(_cbThreadedDeferred:)
 							 object:arg] retain];
 		parentThread = [[NSThread currentThread] retain];
-		[thread start];
+		if (!_paused) {
+			[thread start];
+		} else {
+			return [[DKDeferred deferred] addCallback:callbackTS(self, _cbStartThread:)];
+		}
 	}
+	return self;
+}
+
+- (id)_cbStartThread:(id)arg {
+	[thread start];
 	return self;
 }
 
@@ -541,16 +580,7 @@ id _gatherResultsCallback(id results) {
 - (void)_cbThreadedDeferred:(id)arg {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	id result;
-//	@try {
 	result = [action :arg];
-//	} @catch (NSException *e) {
-//		NSLog(@"Exception in Deferred Thread: %@", e);
-//		result = [NSError 
-//							errorWithDomain:DKDeferredErrorDomain
-//							code:DKDeferredGenericError 
-//							userInfo:dict_(self, DKDeferredDeferredKey,
-//															e, DKDeferredExceptionKey)];
-//	}
 	[self performSelector:@selector(_cbReturnFromThread:) 
 							 onThread:parentThread
 						 withObject:result
@@ -570,6 +600,65 @@ id _gatherResultsCallback(id results) {
 @end
 
 
+@implementation DKDeferredOperation
+
+@synthesize operation = op;
+
++ (DKDeferredOperation *)operation:(id<DKCallback>)func withObject:(id)_arg {
+	return [[[self alloc] initWithFunction:func withObject:_arg canceller:nil paused:NO] autorelease];
+}
+
++ (DKDeferredOperation *)pausedOperation:(id<DKCallback>)func withObject:(id)_arg {
+	return [[[self alloc] initWithFunction:func withObject:_arg canceller:nil paused:YES] autorelease];
+}
+
+- (id)initWithFunction:(id<DKCallback>)func 
+						withObject:(id)_arg
+						 canceller:(id<DKCallback>)cancelf
+								paused:(BOOL)startPaused {
+	if ((self = [super initWithCanceller:cancelf])) {
+		action = [func retain];
+		parentThread = [[NSThread currentThread] retain];
+		op = [[[NSInvocationOperation alloc] 
+					initWithTarget:self
+					selector:@selector(_cbOperation:)
+					 object:_arg] retain];
+	}
+	return self;
+}
+
+- (id)_cbStartOperation:(id)_arg {
+	[op start];
+	return self;
+}
+
+- (void)_cbOperation:(id)_arg {
+	id result = [[[action :_arg] retain] autorelease];
+	[self performSelector:@selector(_cbReturnFromOp:)
+							 onThread:parentThread
+						 withObject:result
+					waitUntilDone:NO];
+}
+
+- (void)_cbReturnFromOp:(id)result {
+	if ([result isKindOfClass:[NSError class]])
+		[self errback:result];
+	else if ([result isKindOfClass:[DKDeferred class]])
+		@throw __CHAINED_DEFERRED_RESULT_ERROR;
+	else
+		[self callback:result];
+}
+
+- (void)dealloc {
+	[action release];
+	[parentThread release];
+	[op	release];
+	[super dealloc];
+}
+
+@end
+
+
 @implementation DKDeferredURLConnection
 
 static NSInteger __urlConnectionCount;
@@ -581,8 +670,20 @@ static NSInteger __urlConnectionCount;
 	return [[(DKDeferredURLConnection *)[DKDeferredURLConnection alloc] initWithURL:aUrl] autorelease];
 }
 
++ (id)pausedDeferredURLConnection:(NSString *)aUrl {
+	return [[(DKDeferredURLConnection *)[DKDeferredURLConnection alloc] initWithURL:aUrl paused:YES] autorelease];
+}
+
 - (id)initWithURL:(NSString *)aUrl {
 	return [self initWithURL:aUrl pauseFor:0.0f];
+}
+
+- (id)initWithURL:(NSString *)aUrl paused:(BOOL)_paused {
+	return [self initRequest:
+						[NSURLRequest requestWithURL:[NSURL URLWithString:aUrl]
+														 cachePolicy:NSURLRequestReloadIgnoringCacheData
+												 timeoutInterval:15.0f]
+						decodeFunction:nil paused:_paused];
 }
 
 - (id)initWithURL:(NSString *)aUrl pauseFor:(NSTimeInterval)pause {
@@ -592,6 +693,31 @@ static NSInteger __urlConnectionCount;
 											 timeoutInterval:15.0f]
 											pauseFor:0.0f
 								decodeFunction:nil];
+}
+
+- (id)initRequest:(NSURLRequest *)req 
+	 decodeFunction:(id<DKCallback>)decodeF
+					 paused:(BOOL)_paused {
+	if ((self = [super initWithCanceller:nil])) {
+		if (!__urlConnectionCount) {
+			__urlConnectionCount = 0;
+		}
+		refreshFrequency = 1.0f;
+		expectedContentLength = 0L;
+		percentComplete = 0.0f;
+		progressCallback = nil;
+		url = [[req URL] retain];
+		_data = [[NSMutableData data] retain];
+		[_data setLength:0];
+		request = [req retain];
+		decodeFunction = [decodeF retain];
+		if (_paused) {
+			return [[DKDeferred deferred] addCallback:callbackTS(self, _cbStartLoading:)];
+		} else {
+			[self _cbStartLoading:nil];
+		}
+	}
+	return self;
 }
 
 - (id)initWithRequest:(NSURLRequest *)req pauseFor:(NSTimeInterval)pause
@@ -617,7 +743,7 @@ static NSInteger __urlConnectionCount;
 										 connectionWithRequest:request
 										 delegate:self] retain];
 			__urlConnectionCount += 1;
-			NSLog(@"connection:%@", connection);
+			NSLog(@"loading %@ : %@", self.started, url);
 			if (!connection) {
 				__urlConnectionCount -= 1;
 				NSLog(@"error:???");
@@ -713,8 +839,17 @@ didReceiveResponse:(NSURLResponse *)response {
 }
 
 - (id)_cbStartLoading:(id)result {
+	NSLog(@"connection: %@ : %@", self.started, url);
 	connection = [[NSURLConnection connectionWithRequest:request delegate:self] retain];
-	return nil;
+	if (connection) {
+		__urlConnectionCount += 1;
+	} else {
+		NSLog(@"nsurlconnection error: connection could not be initialized");
+		[self errback:[NSError
+			errorWithDomain:DKDeferredURLErrorDomain 
+			code:DKDeferredURLError userInfo:EMPTY_DICT]];
+	}
+	return self;
 }
 
 @end
@@ -729,16 +864,18 @@ static DKDeferredCache *__sharedCache;
 
 /// DKCache Protocol
 - (id)setValue:(NSObject *)value forKey:(NSString *)key timeout:(NSTimeInterval)timeout {
-	return [DKDeferred deferInThread:
-					curryTS(self, 
-									@selector(_setValue:forKey:timeout:arg:), 
-									value, key, [NSNumber numberWithInt:(int)timeout])
-												withObject:[NSNull null]];
+	return [DKDeferred defer:
+					curryTS(self,
+									@selector(_setValue:forKey:timeout:arg:),
+									value, key, nsni((int)timeout))
+								withObject:[NSNull null] 
+									 inQueue:operationQueue];
 }
 
 - (id)valueForKey:(NSString *)key {
-	return [DKDeferred deferInThread:callbackTS(self, _getValue:) 
-												withObject:key];
+	return [DKDeferred defer:callbackTS(self, _getValue:) 
+								withObject:key
+									 inQueue:operationQueue];
 }
 
 - (void)deleteValueForKey:(NSString *)key { // TODO: Make asynchronous
@@ -748,8 +885,9 @@ static DKDeferredCache *__sharedCache;
 }
 
 - (id)getManyValues:(NSArray *)keys {
-	return [DKDeferred deferInThread:callbackTS(self, _getManyValues:)
-												withObject:keys];
+	return [DKDeferred defer:callbackTS(self, _getManyValues:) 
+								withObject:keys
+									 inQueue:operationQueue];
 }
 
 - (BOOL)hasKey:(NSString *)key {
@@ -831,6 +969,7 @@ static DKDeferredCache *__sharedCache;
 	if ((self = [super init])) {
 		maxEntries = (_maxEntries < 1) ? 300 : _maxEntries;
 		cullFrequency = (_cullFrequency < 1) ? 3 : _cullFrequency;
+		operationQueue = [[NSOperationQueue alloc] init];
 		// init cache directory
 		NSFileManager *fm = [NSFileManager defaultManager];
 		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDirectory, YES);
@@ -844,6 +983,12 @@ static DKDeferredCache *__sharedCache;
 		}
 	}
 	return self;
+}
+
+- (void)dealloc {
+  [operationQueue release];
+  [dir release];
+  [super dealloc];
 }
 
 - (void)_cull {
@@ -860,7 +1005,7 @@ static DKDeferredCache *__sharedCache;
 		}
 		for (NSString *dead in doomed) {
 			[fm removeItemAtPath:[dir stringByAppendingPathComponent:dead] error:nil];
-			NSLog(@"##DKCache removeItem: %@", dead);
+//			NSLog(@"##DKCache removeItem: %@", dead);
 		}
 	}
 }
@@ -876,8 +1021,278 @@ static DKDeferredCache *__sharedCache;
 @end
 
 
-@implementation NSObject(DKDeferredCache)
+@implementation DKMappedPriorityQueue
 
-+ (BOOL)canBeStoredInCache { return [self conformsToProtocol:@protocol(NSCoding)]; }
+- (id)init {
+	if ((self = [super init])) {
+		_queueKeys = [[NSMutableDictionary alloc] init];
+		_queue = [[NSMutableArray alloc] init];
+	}
+	return self;
+}
+
+- (void)dealloc {
+	[_queueKeys release];
+	[_queue release];
+	[super dealloc];
+}
+
+- (id)objForKey:(id)key	{
+	return [[_queueKeys objectForKey:key]
+					objectAtIndex:1];
+}
+
+- (SEL)selForKey:(id)key {
+	SEL ret;
+	id obj =[[_queueKeys objectForKey:key] objectAtIndex:0];
+	if (obj) {
+		[obj getValue:&ret];
+		return ret;
+	}
+	return nil;
+}
+
+- (int)count {
+	return [_queue count];
+}
+
+- (id)enqueue:(id)obj key:(id)key {
+	return [self enqueue:obj key:key prioritySelector:nil];
+}
+
+- (id)enqueue:(id)obj key:(id)key prioritySelector:(SEL)prioritySel {
+	if (prioritySel == nil) {
+		prioritySel = @selector(compare:);
+	}
+	NSArray *existing = [_queueKeys objectForKey:key];
+	if (existing && [existing count]) {
+		return nil;
+	}
+	[_queue addObject:key];
+	[_queueKeys setObject:
+	 array_([NSValue valueWithBytes:&prioritySel objCType:@encode(SEL)], obj)
+								 forKey:key];
+	[self _siftDown:0 :[_queue count] - 1];
+	return obj;
+}
+
+- (id)dequeue {
+	id key;
+	id keyE;
+	id obj;
+	int size = [_queue count];
+	if (!size) {
+		return nil;
+	}
+	keyE = [[[_queue objectAtIndex:(size - 1)] retain] autorelease];
+	[_queue removeLastObject];
+	if ([_queue count]) {
+		key = [[[_queue objectAtIndex:0] retain] autorelease];
+		[_queue replaceObjectAtIndex:0 withObject:keyE];
+		[self _siftUp:0];
+	} else {
+		key = keyE;
+	}
+	obj = [[[self objForKey:key] retain] autorelease];
+	[_queueKeys removeObjectForKey:key];
+	return array_(obj, key);
+}
+
+- (id)peek {
+	if (![_queue count]) {
+		return nil;
+	}
+	return [_queue objectAtIndex:0];
+}
+
+- (NSArray *)allValues {
+	NSMutableArray *ret = [NSMutableArray array];
+	for (id k in _queue) {
+		[ret addObject:[self objForKey:k]];
+	}
+	return ret;
+}
+
+- (NSArray *)allKeys {
+	return [NSArray arrayWithArray:_queue];
+}
+
+- (NSComparisonResult)compareKeys:(id)leftKey :(id)rightKey {
+	return ((NSComparisonResult)
+		[[self objForKey:leftKey]
+			performSelector:[self selForKey:leftKey]
+			withObject:[self objForKey:rightKey]]);
+}
+
+- (void)_siftDown:(int)startPos :(int)pos {
+	int parentPos;
+	id parent;
+	id newItem = [_queue objectAtIndex:pos];
+	while (pos > startPos) {
+		parentPos = (pos - 1) >> 1;
+		parent = [_queue objectAtIndex:parentPos];
+		if ([self compareKeys:newItem :parent] == NSOrderedAscending) {
+			[_queue replaceObjectAtIndex:pos withObject:parent];
+			pos = parentPos;
+			continue;
+		}
+		break;
+	}
+	[_queue replaceObjectAtIndex:pos withObject:newItem];
+}
+
+- (void)_siftUp:(int)pos {
+	int rightPos;
+	int endPos = [_queue count];
+	int startPos = pos;
+	id newItem = [_queue objectAtIndex:pos];
+	int childPos = 2 * pos + 1;
+	while (childPos < endPos) {
+		rightPos = childPos + 1;
+		if (rightPos < endPos && 
+				!([self compareKeys:[_queue objectAtIndex:childPos] 
+													 :[_queue objectAtIndex:rightPos]] 
+					== NSOrderedAscending)) {
+			childPos = rightPos;
+		}
+		[_queue replaceObjectAtIndex:pos withObject:[_queue objectAtIndex:childPos]];
+		pos = childPos;
+		childPos = 2 * pos + 1;
+	}
+	[_queue replaceObjectAtIndex:pos withObject:newItem];
+	[self _siftDown:startPos :pos];
+}
+
+@end
+
+
+@implementation DKDeferredPool
+
++ (id)pool {
+	return [[[self class] init] autorelease];
+}
+
+- (id)init {
+	if ((self = [super init])) {
+		_queue = [[[DKMappedPriorityQueue alloc] init] retain];
+		_runningDeferreds = [[[NSMutableDictionary alloc] init] retain];
+		concurrency = 10;
+		timeout = 10.0;
+		wLock = [[[NSLock alloc] init] retain];
+	}
+	return self;
+}
+
+- (void)setFinalizeFunc:(id<DKCallback>)f {
+	finalizeFunc = [f retain];
+}
+
+- (void)_checkFinalization {
+	if (finalizeFunc && ![_queue count] && ![_runningDeferreds count]) {
+		[finalizeFunc :self];
+	}
+}
+
+- (id)add:(DKDeferred *)d key:(id)k {
+	id ret;
+	[wLock lock];
+	ret = [_queue enqueue:d key:k prioritySelector:@selector(compareDates:)];
+	[wLock unlock];
+	if (ret) {
+		[d addBoth:curryTS(self, @selector(_cbRemoveDeferred::), k)];
+	} else {
+		ret = d;
+		[ret cancel];
+	}
+	[self _resumeWaiting];
+	return ret;
+}
+
+/**
+ * interesting TODO:
+ * this could function as a cooperative scheduler
+ * for chained deferreds. Each link is paused and scheduled
+ * then resumed when dequeued.
+ */
+- (id)_cbRemoveDeferred:(id)key :(id)results {
+	if (isDeferred(results)) {
+		[wLock lock];
+		[_runningDeferreds setObject:results forKey:key];
+		[wLock unlock];
+		return [results addBoth:curryTS(self, @selector(_cbRemoveDeferred::), key)];
+	}
+	[wLock lock];
+	[_runningDeferreds removeObjectForKey:key];
+	[wLock unlock];
+	[self _resumeWaiting];
+	return results;
+}
+
+- (void)_resumeWaiting {
+	NSArray *item;
+	NSMutableArray *resumables = [NSMutableArray array];
+	[wLock lock];
+	while ([_runningDeferreds count] < concurrency) {
+		item = [_queue dequeue];
+		if (!item || ![item count]) {
+			break;
+		}
+		[[item retain] autorelease];
+		[resumables addObject:item];
+		[_runningDeferreds setObject:[item objectAtIndex:0]
+													forKey:[item objectAtIndex:1]];
+	}
+	[self _checkFinalization];
+	[wLock unlock]; // a callback can return in the same thread and invoke _resumeWaiting here
+	for (item in resumables) {
+		[[item objectAtIndex:0] callback:nil];
+	}
+}
+
+- (void)drain {
+	[[_runningDeferreds allValues] makeObjectsPerformSelector:@selector(cancel)];
+	id obj;
+	while ((obj = [_queue dequeue])) {
+		if ([obj count]) {
+			[[obj objectAtIndex:0] cancel];
+		}
+	}
+}
+
+- (void)setConcurrency:(int)numConcurrentDeferreds {
+	@synchronized(self) {
+		concurrency = numConcurrentDeferreds;
+	}
+}
+
+- (int)concurrency {
+	int c;
+	@synchronized(self) {
+		c = concurrency;
+	}
+	return c;
+}
+
+- (void)setTimeout:(double)concurrentDeferredTimeout {
+	@synchronized(self) {
+		timeout = concurrentDeferredTimeout;
+	}
+}
+
+- (double)timeout {
+	int t;
+	@synchronized(self) {
+		t = timeout;
+	}
+	return t;
+}
+
+- (void)dealloc {
+	[finalizeFunc release];
+	[wLock release];
+	[_runningDeferreds release];
+	[_queue release];
+	[super dealloc];
+}
 
 @end
