@@ -78,3 +78,10 @@
 - (id):(NSArray *)args;
 
 @end
+
+
+@interface NSDate (JSONCustomization)
+
+- (id)proxyForJson;
+
+@end

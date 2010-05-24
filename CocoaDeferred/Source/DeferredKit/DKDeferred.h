@@ -139,6 +139,7 @@
 // comparison
 - (NSComparisonResult)compare:(DKDeferred *)otherDeferred;
 - (NSComparisonResult)compareDates:(DKDeferred *)otherDeferred;
+- (NSComparisonResult)reverseCompareDates:(DKDeferred *)otherDeferred;
 
 @end
 
@@ -434,6 +435,8 @@
 - (int)concurrency;
 - (void)setTimeout:(double)concurrentDeferredTimeout;
 - (double)timeout;
+- (SEL)comparisonSelector;
+- (void)setComparisonSelector:(SEL)selecter;
 
 @end
 
@@ -494,6 +497,7 @@
   double timeout;
   id<DKCallback> finalizeFunc;
   NSLock *wLock;
+  SEL comparisonSelector;
 }
 
 + (id)pool;

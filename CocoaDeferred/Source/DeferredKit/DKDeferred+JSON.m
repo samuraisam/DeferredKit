@@ -87,11 +87,20 @@ id _decodeJSONResonse(id results) {
 }
 
 - (id):(NSArray *)args {
-  NSDictionary *methodCall = dict_(serviceName, @"method", args, @"params", _uuid1(), @"id");
-  //NSLog(@"methodCall:%@", methodCall);
-  NSString *post = [[[SBJSON alloc] init] stringWithObject:methodCall];
+  NSDictionary *methodCall = dict_(serviceName, @"method", 
+                                   args, @"params", 
+                                   _uuid1(), @"id", 
+                                   @"1.1", @"version");
+  NSError *error = nil;
+  NSString *post = [[[SBJSON alloc] init] stringWithObject:methodCall error:&error];
+  if (error)
+    return [DKDeferred fail:error];
+  
   NSMutableURLRequest *req = [[NSMutableURLRequest alloc] 
                               initWithURL:[NSURL URLWithString:serviceURL]];
+  [req setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+  [req setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+  [req setValue:@"DeferredKit JSON-RPC Proxy 1.0" forHTTPHeaderField:@"User-Agent"];
   [req setHTTPMethod:@"POST"];
   [req setHTTPBody:[post dataUsingEncoding:NSUTF8StringEncoding]];
   DKDeferred *d = [[DKDeferredURLConnection alloc] 
@@ -139,5 +148,12 @@ id _decodeJSONResonse(id results) {
   [invocation setArgument:&method atIndex:3];
   [invocation invokeWithTarget:[DKJSONServiceProxy alloc]];
 }
+
+@end
+
+
+@implementation NSDate (JSONCustomization)
+
+- (id)proxyForJson { return [self description]; }
 
 @end
