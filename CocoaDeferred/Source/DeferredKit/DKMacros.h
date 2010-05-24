@@ -59,7 +59,7 @@ static inline id<DKCallback> _curryTS(id target, SEL selector, ...) {
 #define floatv(__o) [__o floatValue]
 #define boolv(__o) [__o boolValue]
 #define array_(__args...) [NSArray arrayWithObjects:__args, nil]
-#define dict_(__args...) [NSDictionary dictionaryWithObjectsAndKeys:__args, nil]
+#define dict_(...) [NSDictionary dictionaryWithObjectsAndKeys:__VA_ARGS__, nil]
 #ifndef EMPTY_DICT
 #define EMPTY_DICT [NSDictionary dictionary]
 #endif
