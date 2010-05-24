@@ -5,3 +5,5 @@ CocoaDeferred/build/**
 .svn
 .cvs
 .DS_Store
+docs_build
+docs_build.zip
