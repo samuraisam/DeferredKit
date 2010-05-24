@@ -13,7 +13,7 @@
 
 /**
  * Returns a Deferred which will callback with the native representation
- * of the JSON document at <code>aUrl</code>
+ * of the JSON document at <code>aUrl</code>.
  */
 + (id)loadJSONDoc:(NSString *)aUrl;
 

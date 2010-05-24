@@ -28,7 +28,7 @@
   <li>Add DeferredKit to your project.
 
   <ul>
-  <li>Copy <code>"{PROJECT_ROOT}/DeferredKit/CocoaDeferred/CocoaDeferred.xcodeproj"</code></li>
+  <li>Copy <code>"{PROJECT_ROOT}/DeferredKit/CocoaDeferred/CocoaDeferred.xcodeproj"</code> to the <strong>Groups and Files</strong> pane of Xcode.</li>
   <li>In the window presented by Xcode, uncheck "Copy items...". Reference type should be "Relative to Project"</li>
   <li>Uncheck any targets Xcode might automatically assume.</li>
   </ul>

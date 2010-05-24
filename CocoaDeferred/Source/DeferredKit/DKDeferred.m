@@ -151,7 +151,9 @@ id _gatherResultsCallback(id results) {
     return [[DKDeferredURLConnection loadURL:url] 
             addBoth:curryTS((id)self, @selector(_cachedLoadURLCallback:results:), url)];
   } else {
-    [[DKDeferredCache sharedCache] setValue:_results forKey:url timeout:7200.0f];
+    [[DKDeferredCache sharedCache] 
+     setValue:_results forKey:url
+     timeout:[[DKDeferredCache sharedCache] defaultTimeout]];
     return _results;
   }
   return nil;
@@ -162,17 +164,6 @@ id _gatherResultsCallback(id results) {
 }
 
 + (id)loadURL:(NSString *)aUrl paused:(BOOL)_paused { 
-//  id ret;
-//  if (_paused) {
-//    ret = [DKDeferred deferred];
-//    [ret addBoth:callbackTS((id)self, _cbStartConnection:)];
-//    [ret pause];
-//    [ret callback:aUrl];
-//  } else {
-//  id ret = [DKDeferredURLConnection deferredURLConnection:aUrl];
-//  if (_paused)
-//    [ret pause];
-//  }
   return [[[DKDeferredURLConnection alloc] initWithURL:aUrl paused:_paused] autorelease];
 }
 
@@ -862,6 +853,8 @@ static DKDeferredCache *__sharedCache;
 
 @implementation DKDeferredCache
 
+@synthesize defaultTimeout;
+
 /// DKCache Protocol
 - (id)setValue:(NSObject *)value forKey:(NSString *)key timeout:(NSTimeInterval)timeout {
   return [DKDeferred defer:
@@ -970,6 +963,7 @@ static DKDeferredCache *__sharedCache;
     maxEntries = (_maxEntries < 1) ? 300 : _maxEntries;
     cullFrequency = (_cullFrequency < 1) ? 3 : _cullFrequency;
     operationQueue = [[NSOperationQueue alloc] init];
+    self.defaultTimeout = 7200.0;
     // init cache directory
     NSFileManager *fm = [NSFileManager defaultManager];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDirectory, YES);

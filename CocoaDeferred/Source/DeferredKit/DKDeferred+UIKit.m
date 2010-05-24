@@ -70,7 +70,7 @@
     if (boolv(shouldCache)) {
       [[DKDeferredCache sharedCache] 
        setValue:UIImagePNGRepresentation(img)
-       forKey:url timeout:7200.0];
+       forKey:url timeout:[[DKDeferredCache sharedCache] defaultTimeout]];
     }
     return img;
   }

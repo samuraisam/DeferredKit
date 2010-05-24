@@ -71,6 +71,18 @@
   *     return nil;
   * }
   * </pre>   
+  *
+  * DKDeferred, much like the NSDate class is an aggregate class. Many of the public
+  * constructors you use through this class will return classes that inherit from
+  * DKDeferred. Initializers may sometimes return objects that do not directly represent
+  * the object you're initializing (for instance, some paused deferreds). Therefore
+  * it is crucial when typing your deferred symbols it is best to use <code>id</code> or
+  * <code>DKDeferred*</code> like so:
+  * <pre>
+  * DKDeferred *d = [DKDeferred deferInThread:callbackP(_run) withObject:self];
+  * --or--
+  * id d = [DKDeferred deferInThread:callbackP(_run) withObject:self];
+  * </pre>
   */
 
 @interface DKDeferred : NSObject {
@@ -191,7 +203,14 @@
  * timers and events to continue being processed in the same thread.
  *
  * It's not normally recommended to use this method but functions as a 
- * great way to prototype.
+ * great way to prototype. It does however allow you to do some cool things,
+ * like calling JSON-RPC methods inline:
+ *
+ * <pre>
+ * id ret = waitForDeferred(
+ *           [[[DKDeferred jsonService:WS_URL]
+ *            myNamespace] myMethod:array_(username, password, arg1)]);
+ * </pre>         
  */
 @interface DKWaitForDeferred : NSObject
 {
@@ -358,9 +377,11 @@
   int maxEntries;
   int cullFrequency;
   NSString *dir;
-  NSTimeInterval *defaultTimeout;
+  NSTimeInterval defaultTimeout;
   NSOperationQueue *operationQueue;
 }
+
+@property(assign) NSTimeInterval defaultTimeout;
 
 + (id)sharedCache;
 - (id)initWithDirectory:(NSString *)_dir 
