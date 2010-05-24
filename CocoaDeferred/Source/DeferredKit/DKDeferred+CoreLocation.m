@@ -37,6 +37,7 @@
 - (void)_timeout:(id)arg {
   if (fired == -1) {
     [_manager stopUpdatingLocation];
+    failed = YES;
     [self errback:
      [NSError
       errorWithDomain:@"DKDeferredLocation"
@@ -56,15 +57,25 @@
   updates += 1;
   if (updates > 1) {
     [manager stopUpdatingLocation];
+    [manager autorelease];
     location = [newLocation retain];
-    [self callback:location];
+    if (!failed) {
+      [self callback:location];
+    }
   }
 }
 
 - (void)locationManager:(CLLocationManager *)manager 
        didFailWithError:(NSError *)error {
+  NSLog(@"locationManager:%@ didFailWithError:%@ %@", manager, error, [error userInfo]);
   [manager stopUpdatingLocation];
   [self errback:error];
+}
+
+- (void)dealloc {
+  [_manager release];
+  [location release];
+  [super dealloc];
 }
 
 @end

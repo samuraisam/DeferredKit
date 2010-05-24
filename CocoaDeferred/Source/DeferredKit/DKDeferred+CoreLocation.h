@@ -30,6 +30,7 @@
   CLLocation *location;
   CLLocationManager *_manager;
   BOOL onlyOne;
+  BOOL failed;
   int updates;
 }
 
