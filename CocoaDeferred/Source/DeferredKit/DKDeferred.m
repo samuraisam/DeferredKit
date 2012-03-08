@@ -8,6 +8,15 @@
 #import "DKDeferred.h"
 #import <CommonCrypto/CommonDigest.h>
 
+/**
+ * Creates a new NSString containing a UUID
+ **/
+static inline NSString* _uuid1() {
+    CFUUIDRef uuid = CFUUIDCreate(nil);
+    NSString *uuidString = (NSString *)CFUUIDCreateString(nil, uuid);
+    CFRelease(uuid);
+    return [uuidString autorelease];
+}
 
 NSString* md5(NSString *str) {
   const char *cStr = [str UTF8String];

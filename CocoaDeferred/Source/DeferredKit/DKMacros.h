@@ -67,13 +67,5 @@ static inline id<DKCallback> _curryTS(id target, SEL selector, ...) {
 #define EMPTY_ARRAY [NSArray array]
 #endif
 
-/**
-  * Creates a new NSString containing a UUID
-  **/
-static inline NSString* _uuid1() {
-  CFUUIDRef uuid = CFUUIDCreate(nil);
-  NSString *uuidString = (NSString *)CFUUIDCreateString(nil, uuid);
-  CFRelease(uuid);
-  return [uuidString autorelease];
-}
+
 #endif
