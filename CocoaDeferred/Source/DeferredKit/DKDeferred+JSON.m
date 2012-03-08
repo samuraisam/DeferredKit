@@ -87,10 +87,14 @@ id _decodeJSONResonse(id results) {
 }
 
 - (id):(NSArray *)args {
+    CFUUIDRef	uuidObj = CFUUIDCreate(nil);
+NSString *uuidStr = (NSString*)CFUUIDCreateString(NULL, uuidObj);
+
   NSDictionary *methodCall = dict_(serviceName, @"method", 
                                    args, @"params", 
-                                   _uuid1(), @"id", 
+                                   uuidStr, @"id", 
                                    @"1.1", @"version");
+CFRelease(uuidObj);
   NSError *error = nil;
   NSString *post = [[[SBJSON alloc] init] stringWithObject:methodCall error:&error];
   if (error)

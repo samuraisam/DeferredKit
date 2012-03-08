@@ -353,7 +353,7 @@ id _gatherResultsCallback(id results) {
     if (f == [NSNull null])
       continue;
     id newResult = [(id<DKCallback>)f :result];
-    result = (newResult == nil) ? [NSNull null] : newResult;
+    result = (newResult) ? [NSNull null] : newResult;
     _fired = [result isKindOfClass:[NSError class]] ? 1 : 0;
     if ([result isKindOfClass:[self class]]) {
       cb = callbackTS(self, _continueChain:);
