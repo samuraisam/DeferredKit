@@ -147,7 +147,6 @@
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
-				229C37A3104DCFFF00CFAA3F /* UIKit.framework */,
 				229C389E104DE23400CFAA3F /* DeferredTest-Info.plist */,
 			);
 			name = CocoaDeferred;
@@ -156,6 +155,7 @@
 		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				229C37A3104DCFFF00CFAA3F /* UIKit.framework */,
 				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
 			);
 			name = Frameworks;

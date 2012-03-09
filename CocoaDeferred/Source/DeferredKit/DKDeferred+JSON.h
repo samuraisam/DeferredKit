@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "JSON/JSON.h"
+#import "JSON.h"
 #import "DKDeferred.h"
 #import <uuid/uuid.h>
 
