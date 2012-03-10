@@ -30,7 +30,7 @@ static inline id<DKCallback> _curryTS(id target, SEL selector, ...) {
   va_start(argumentList, selector);
   id arg;
   int i = 0;
-  while (arg = va_arg(argumentList, id)) {
+  while ((arg = va_arg(argumentList, id))) {
     //NSLog(@"arg:%@", arg);
     [invocation setArgument:&arg atIndex:i + 2];
     i++;
