@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,10 +14,7 @@
 		229C375E104C756800CFAA3F /* DKDeferred+UIKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C3750104C756800CFAA3F /* DKDeferred+UIKit.m */; };
 		229C375F104C756800CFAA3F /* DKDeferred+UIKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 229C3751104C756800CFAA3F /* DKDeferred+UIKit.h */; };
 		229C3761104C756800CFAA3F /* DKDeferred.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C3753104C756800CFAA3F /* DKDeferred.m */; };
-		229C3763104C756800CFAA3F /* DKDeferred+JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 229C3755104C756800CFAA3F /* DKDeferred+JSON.h */; };
-		229C3764104C756800CFAA3F /* DKDeferred.h in Headers */ = {isa = PBXBuildFile; fileRef = 229C3756104C756800CFAA3F /* DKDeferred.h */; };
 		229C3765104C756800CFAA3F /* DKCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 229C3757104C756800CFAA3F /* DKCallback.h */; };
-		229C3766104C756800CFAA3F /* DKMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 229C3758104C756800CFAA3F /* DKMacros.h */; };
 		229C3767104C756800CFAA3F /* DKCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C3759104C756800CFAA3F /* DKCallback.m */; };
 		229C3773104C76D400CFAA3F /* UIImage+DKDeferred.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C3771104C76D400CFAA3F /* UIImage+DKDeferred.m */; };
 		229C3774104C76D400CFAA3F /* UIImage+DKDeferred.h in Headers */ = {isa = PBXBuildFile; fileRef = 229C3772104C76D400CFAA3F /* UIImage+DKDeferred.h */; };
@@ -44,6 +41,7 @@
 		229C38CA104DE5C400CFAA3F /* DKDeferredTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C38C9104DE5C400CFAA3F /* DKDeferredTests.m */; };
 		229C38D0104DE5E400CFAA3F /* DKDeferredJSONTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C38CF104DE5E400CFAA3F /* DKDeferredJSONTests.m */; };
 		229C390C104DEAC800CFAA3F /* DKCallbackTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C390B104DEAC800CFAA3F /* DKCallbackTests.m */; };
+		9AFE7D7B1508961D005CBF23 /* DKMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AFE7D77150879E6005CBF23 /* DKMacros.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		AA747D9F0F9514B9006C5449 /* CocoaDeferred_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* CocoaDeferred_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 /* End PBXBuildFile section */
@@ -73,7 +71,6 @@
 		229C3755104C756800CFAA3F /* DKDeferred+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "DKDeferred+JSON.h"; path = "Source/DeferredKit/DKDeferred+JSON.h"; sourceTree = SOURCE_ROOT; };
 		229C3756104C756800CFAA3F /* DKDeferred.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKDeferred.h; path = Source/DeferredKit/DKDeferred.h; sourceTree = SOURCE_ROOT; };
 		229C3757104C756800CFAA3F /* DKCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKCallback.h; path = Source/DeferredKit/DKCallback.h; sourceTree = SOURCE_ROOT; };
-		229C3758104C756800CFAA3F /* DKMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKMacros.h; path = Source/DeferredKit/DKMacros.h; sourceTree = SOURCE_ROOT; };
 		229C3759104C756800CFAA3F /* DKCallback.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DKCallback.m; path = Source/DeferredKit/DKCallback.m; sourceTree = SOURCE_ROOT; };
 		229C3771104C76D400CFAA3F /* UIImage+DKDeferred.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+DKDeferred.m"; path = "Source/DeferredKit/UIImage+DKDeferred.m"; sourceTree = SOURCE_ROOT; };
 		229C3772104C76D400CFAA3F /* UIImage+DKDeferred.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+DKDeferred.h"; path = "Source/DeferredKit/UIImage+DKDeferred.h"; sourceTree = SOURCE_ROOT; };
@@ -105,6 +102,7 @@
 		229C38CF104DE5E400CFAA3F /* DKDeferredJSONTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKDeferredJSONTests.m; sourceTree = "<group>"; };
 		229C390A104DEAC800CFAA3F /* DKCallbackTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKCallbackTests.h; sourceTree = "<group>"; };
 		229C390B104DEAC800CFAA3F /* DKCallbackTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKCallbackTests.m; sourceTree = "<group>"; };
+		9AFE7D77150879E6005CBF23 /* DKMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKMacros.h; path = Source/DeferredKit/DKMacros.h; sourceTree = SOURCE_ROOT; };
 		AA747D9E0F9514B9006C5449 /* CocoaDeferred_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaDeferred_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* libDeferredKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDeferredKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -149,7 +147,6 @@
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
-				229C37A3104DCFFF00CFAA3F /* UIKit.framework */,
 				229C389E104DE23400CFAA3F /* DeferredTest-Info.plist */,
 			);
 			name = CocoaDeferred;
@@ -158,6 +155,7 @@
 		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				229C37A3104DCFFF00CFAA3F /* UIKit.framework */,
 				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
 			);
 			name = Frameworks;
@@ -168,6 +166,7 @@
 			children = (
 				229C38AB104DE34D00CFAA3F /* Tests */,
 				229C3809104DDE4600CFAA3F /* JSON */,
+				9AFE7D77150879E6005CBF23 /* DKMacros.h */,
 				229C374C104C756800CFAA3F /* DeferredKit.h */,
 				229C3771104C76D400CFAA3F /* UIImage+DKDeferred.m */,
 				229C3772104C76D400CFAA3F /* UIImage+DKDeferred.h */,
@@ -180,7 +179,6 @@
 				229C3755104C756800CFAA3F /* DKDeferred+JSON.h */,
 				229C3756104C756800CFAA3F /* DKDeferred.h */,
 				229C3757104C756800CFAA3F /* DKCallback.h */,
-				229C3758104C756800CFAA3F /* DKMacros.h */,
 				229C3759104C756800CFAA3F /* DKCallback.m */,
 			);
 			name = Classes;
@@ -255,10 +253,7 @@
 				AA747D9F0F9514B9006C5449 /* CocoaDeferred_Prefix.pch in Headers */,
 				229C375A104C756800CFAA3F /* DeferredKit.h in Headers */,
 				229C375F104C756800CFAA3F /* DKDeferred+UIKit.h in Headers */,
-				229C3763104C756800CFAA3F /* DKDeferred+JSON.h in Headers */,
-				229C3764104C756800CFAA3F /* DKDeferred.h in Headers */,
 				229C3765104C756800CFAA3F /* DKCallback.h in Headers */,
-				229C3766104C756800CFAA3F /* DKMacros.h in Headers */,
 				229C3774104C76D400CFAA3F /* UIImage+DKDeferred.h in Headers */,
 				229C3821104DDE5F00CFAA3F /* SBJSON.h in Headers */,
 				229C3824104DDE5F00CFAA3F /* JSON.h in Headers */,
@@ -267,6 +262,7 @@
 				229C382A104DDE5F00CFAA3F /* SBJsonWriter.h in Headers */,
 				229C382B104DDE5F00CFAA3F /* NSObject+SBJSON.h in Headers */,
 				229C382C104DDE5F00CFAA3F /* NSString+SBJSON.h in Headers */,
+				9AFE7D7B1508961D005CBF23 /* DKMacros.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -314,9 +310,16 @@
 /* Begin PBXProject section */
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "CocoaDeferred" */;
-			compatibilityVersion = "Xcode 3.1";
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				en,
+			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* CocoaDeferred */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
@@ -407,13 +410,14 @@
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/CocoaDeferred.dst;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = CocoaDeferred_Prefix.pch;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = DeferredKit;
+				SDKROOT = iphoneos;
 			};
 			name = Debug;
 		};
@@ -426,8 +430,10 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = CocoaDeferred_Prefix.pch;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = CocoaDeferred;
+				SDKROOT = iphoneos;
 			};
 			name = Release;
 		};
@@ -441,8 +447,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = ./Source;
 				OTHER_LDFLAGS = "-ObjC";
-				PREBINDING = NO;
-				SDKROOT = iphoneos3.0;
+				SDKROOT = iphoneos;
 			};
 			name = Debug;
 		};
@@ -454,8 +459,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				OTHER_LDFLAGS = "-ObjC";
-				PREBINDING = NO;
-				SDKROOT = iphoneos3.0;
+				SDKROOT = iphoneos;
 			};
 			name = Release;
 		};
@@ -478,9 +482,8 @@
 					"-framework",
 					UIKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = DeferredTest;
-				SDKROOT = iphoneos3.0;
+				SDKROOT = iphoneos;
 			};
 			name = Debug;
 		};
@@ -491,7 +494,6 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/UIKit.framework/Headers/UIKit.h";
 				INFOPLIST_FILE = "DeferredTest-Info.plist";
@@ -502,9 +504,8 @@
 					"-framework",
 					UIKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = DeferredTest;
-				SDKROOT = iphoneos2.1;
+				SDKROOT = iphoneos;
 				ZERO_LINK = NO;
 			};
 			name = Release;

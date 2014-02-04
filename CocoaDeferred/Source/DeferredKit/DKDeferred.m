@@ -8,6 +8,15 @@
 #import "DKDeferred.h"
 #import <CommonCrypto/CommonDigest.h>
 
+/**
+ * Creates a new NSString containing a UUID
+ **/
+static inline NSString* _uuid1() {
+    CFUUIDRef uuid = CFUUIDCreate(nil);
+    NSString *uuidString = (NSString *)CFUUIDCreateString(nil, uuid);
+    CFRelease(uuid);
+    return [uuidString autorelease];
+}
 
 NSString* md5(NSString *str) {
   const char *cStr = [str UTF8String];
@@ -344,7 +353,7 @@ id _gatherResultsCallback(id results) {
     if (f == [NSNull null])
       continue;
     id newResult = [(id<DKCallback>)f :result];
-    result = (newResult == nil) ? [NSNull null] : newResult;
+    result = (newResult) ? [NSNull null] : newResult;
     _fired = [result isKindOfClass:[NSError class]] ? 1 : 0;
     if ([result isKindOfClass:[self class]]) {
       cb = callbackTS(self, _continueChain:);
@@ -983,10 +992,10 @@ static DKDeferredCache *__sharedCache;
     NSString *cachesPath = [paths objectAtIndex:0];
     dir = [[cachesPath stringByAppendingPathComponent:_dir] retain];
     if (![fm fileExistsAtPath:cachesPath]) {
-      [fm createDirectoryAtPath:cachesPath attributes:nil];
+      [fm createDirectoryAtPath:cachesPath withIntermediateDirectories:NO attributes:nil error:nil];
     }
     if (![fm fileExistsAtPath:dir]) {
-      [fm createDirectoryAtPath:dir attributes:nil];
+      [fm createDirectoryAtPath:dir withIntermediateDirectories:NO attributes:nil error:nil];
     }
   }
   return self;
@@ -1001,7 +1010,7 @@ static DKDeferredCache *__sharedCache;
 - (void)_cull {
   if ([self _getNumEntries] > maxEntries) {
     NSFileManager *fm = [NSFileManager defaultManager];
-    NSArray *fileList = [fm directoryContentsAtPath:dir];
+    NSArray *fileList = [fm contentsOfDirectoryAtPath:dir error:nil];
     NSMutableArray *doomed = [NSMutableArray array];
     int count = 0;
     for (NSString *path in fileList) {
@@ -1019,7 +1028,7 @@ static DKDeferredCache *__sharedCache;
 
 - (int)_getNumEntries {
   NSArray *fileNames = [[NSFileManager defaultManager]
-                        directoryContentsAtPath:dir];
+                        contentsOfDirectoryAtPath:dir error:nil];
   if (!fileNames)
     return 0;
   return [fileNames count];

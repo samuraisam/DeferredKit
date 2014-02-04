@@ -6,8 +6,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "JSON/JSON.h"
+#import "JSON.h"
 #import "DKDeferred.h"
+#import <uuid/uuid.h>
 
 @interface DKDeferred (JSONAdditions)
 
@@ -76,6 +77,8 @@
  * with the native representation of the method results.
  */
 - (id):(NSArray *)args;
+
+- (id)callWithName:(NSString *)name args:(NSArray *)args;
 
 @end
 
